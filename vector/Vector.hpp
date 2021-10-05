@@ -28,7 +28,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 
 
 	public:
-		//CONSTRUCTOR
+		//CONSTRUCTORS
 		explicit vector (const allocator_type& alloc = allocator_type()) {}
 
 
@@ -58,8 +58,18 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			for(size_type i = 0; i < _size; i++)
 				_allocator.construct(_first + i, *(x._first + i));
 		}
+		//DESTRUCTOR
+		~vector()
+		{
+			if(_first != 0)
+			{
+				for(size_type i = 0; i < _size; i++)
+					_allocator.destroy(_first + i);
+				_allocator.deallocate(_first, _capacity);
+			}
+		}
 
-
+		//OPERATOR=
 
 
 };
