@@ -2,5 +2,5 @@
 
 int main()
 {
-	ft::vector<int> a[5];
+	ft::vector<int> a(5);
 }

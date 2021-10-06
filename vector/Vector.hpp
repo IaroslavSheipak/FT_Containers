@@ -1,6 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include <memory>
+#include "../iterator/iterator.hpp"
 
 namespace ft{
 
@@ -17,10 +18,10 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		typedef const value_type& const_reference;
 		typedef typename Allocator::pointer pointer;
 		typedef typename Allocator::const_pointer const_pointer;
-		//typedef ft::iterator<T> iterator;
-		//typedef ft::const_iterator<T> const_iterator;
-		//typedef ft::reverse_iterator<T> reverse_iterator;
-		//typedef ft::const_reverse_iterator<T> const_reverse_iterator;
+		typedef ft::iterator<T> iterator;
+		typedef ft::const_iterator<T> const_iterator;
+		typedef ft::reverse_iterator<T> reverse_iterator;
+		typedef ft::const_reverse_iterator<T> const_reverse_iterator;
 	private:
 		pointer		_first;
 		size_type 	_size, _capacity;
@@ -35,7 +36,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		explicit vector (size_type n, const value_type& val = value_type(),
                  const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n)
 		{
-			_first = _allocator.allocate();
+			_first = _allocator.allocate(_capacity);
 
 		}
 
@@ -63,15 +64,67 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		{
 			if(_first != 0)
 			{
-				for(size_type i = 0; i < _size; i++)
-					_allocator.destroy(_first + i);
+				//for(size_type i = 0; i < _size; i++)
+				//	_allocator.destroy(_first + i);
 				_allocator.deallocate(_first, _capacity);
 			}
 		}
 
 		//OPERATOR=
+		vector& operator= (const vector& x);
+
+		//ITERATORS
+		iterator begin(){
+			return (iterator(_first));
+		}
+		const_iterator begin() const{
+			return (iterator(_first));
+		}
+		iterator end(){
+			return (iterator(_first + _size));
+		}
+		const_iterator end() const{
+			return (iterator(_first + _size));
+		}
+		reverse_iterator rbegin();
+		const_reverse_iterator rbegin() const;
+		reverse_iterator rend();
+		const_reverse_iterator rend() const;
+		//CAPACITY
+		
+		
+		size_type size() const{
+			return(_size);
+		}
+		size_type max_size() const{
+			return(_allocator.max_size());
+		}
+		void resize (size_type n, value_type val = value_type());
+		size_type capacity() const{
+			return (_capacity);
+		}
+		bool empty() const{
+			return(_size == 0);
+		}
+		void reserve (size_type n);
+		//ELEMENT ACCESS
+		reference operator[] (size_type n);
+		const_reference operator[] (size_type n) const;
+		reference at (size_type n);
+		const_reference at (size_type n) const;
+		reference front();
+		const_reference front() const;
+		reference back();
+		const_reference back() const;
+
+		//MODIFIERS
 
 
+
+
+
+
+		//ALLOCATOR
 };
 
 
