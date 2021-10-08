@@ -137,7 +137,18 @@ template<typename T>class const_iterator
 		const_iterator(const const_iterator & src){
 			*this = src;
 		}
+		const_iterator(const iterator<T> & src){
+			*this = src;
+		}
+		const_iterator(pointer rhs)
+		{
+			this->ptr = rhs;
+		}
 		const_iterator & operator=(const const_iterator & src){
+			_ptr = src.ptr;
+			return (*this);
+		}
+		const_iterator & operator=(const iterator<T> & src){
 			_ptr = src.ptr;
 			return (*this);
 		}
@@ -147,37 +158,19 @@ template<typename T>class const_iterator
 		bool operator==(const const_iterator & rhs) const{
 			return (_ptr == rhs.ptr);
 		}
-		bool operator==(const const_iterator<T> &rhs) const{
-			return (_ptr == rhs.ptr);
-		}
 		bool operator!=(const const_iterator & rhs) const{
-			return (_ptr != rhs.ptr);
-		}
-		bool operator!=(const const_iterator<T> &rhs) const{
 			return (_ptr != rhs.ptr);
 		}
 		bool operator>(const const_iterator & rhs) const{
 			return (_ptr > rhs.ptr);
 		}
-		bool operator>(const const_iterator<T> &rhs) const{
-			return (_ptr > rhs.ptr);
-		}
 		bool operator<(const const_iterator & rhs) const{
-			return (_ptr < rhs.ptr);
-		}
-		bool operator<(const const_iterator<T> &rhs) const{
 			return (_ptr < rhs.ptr);
 		}
 		bool operator<=(const const_iterator & rhs) const{
 			return (_ptr <= rhs.ptr);
 		}
-		bool operator<=(const const_iterator<T> &rhs) const{
-			return (_ptr <= rhs.ptr);
-		}
 		bool operator>=(const const_iterator & rhs) const{
-			return (_ptr >= rhs.ptr);
-		}
-		bool operator>=(const const_iterator<T> &rhs) const{
 			return (_ptr >= rhs.ptr);
 		}
 		const_iterator & operator++(){
@@ -192,7 +185,6 @@ template<typename T>class const_iterator
 		const_iterator & operator--(){
 			--_ptr;
 			return (*this);
-
 		}
 		const_iterator & operator--(int){
 			const_iterator tmp = *this;
@@ -213,9 +205,6 @@ template<typename T>class const_iterator
 			return(_ptr - a);
 		}
 		difference_type operator-(const const_iterator & b){
-			return(_ptr - b._ptr);
-		}
-		difference_type operator-(const const_iterator<T> & b){
 			return(_ptr - b._ptr);
 		}
 		const_iterator & operator+=(const difference_type & a){

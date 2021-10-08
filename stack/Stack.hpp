@@ -8,7 +8,7 @@ namespace ft{
 template<class T, class Container = std::vector<T> >
 	class stack{
 	typedef T value_type;
-	typedef std::vector<T> container_type;
+	typedef Container container_type;
 	typedef std::size_t size_type;
 
 	
