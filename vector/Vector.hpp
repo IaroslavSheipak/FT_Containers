@@ -37,6 +37,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
                  const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n)
 		{
 			_first = _allocator.allocate(_capacity);
+			for(
 
 		}
 
@@ -108,8 +109,12 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 		void reserve (size_type n);
 		//ELEMENT ACCESS
-		reference operator[] (size_type n);
-		const_reference operator[] (size_type n) const;
+		reference operator[] (size_type n){
+			return(*(_first + n));
+		}
+		const_reference operator[] (size_type n) const{
+			return(*(_first + n));
+		}
 		reference at (size_type n);
 		const_reference at (size_type n) const;
 		reference front();
