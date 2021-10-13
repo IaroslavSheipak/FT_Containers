@@ -9,6 +9,7 @@ struct NoDefaultConstructor{
 		~NoDefaultConstructor(){};
 };
 
+
 void	test_reserve(){
 	ft::vector<NoDefaultConstructor> vec;
 
