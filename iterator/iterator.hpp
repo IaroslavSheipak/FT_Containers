@@ -31,7 +31,7 @@ template<typename T>class RandomAccessIterator
 			*this = src;
 		}
 		RandomAccessIterator & operator=(const RandomAccessIterator & src){
-			_ptr = src.ptr;
+			_ptr = src._ptr;
 			return (*this);
 		}
 		~RandomAccessIterator(){};

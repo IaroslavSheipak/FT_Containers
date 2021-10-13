@@ -68,9 +68,10 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		{
 			if(_first != 0)
 			{
-				//for(size_type i = 0; i < _size; i++)
-				//	_allocator.destroy(_first + i);
-				_allocator.deallocate(_first, _capacity);
+				for(size_type i = 0; i < _size; i++)
+					_allocator.destroy(_first + i);
+				if(_capacity != 0)
+					_allocator.deallocate(_first, _capacity);
 			}
 		}
 
@@ -106,7 +107,33 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			return(_allocator.max_size());
 		}
 		
-		void resize (size_type n, value_type val = value_type());
+		void reserve (size_type n){
+			if (n < _capacity)
+				return;
+			T* newarr = _allocator.allocate(n);
+			try{
+				std::uninitialized_copy(_first, _first + _size, newarr);
+			} catch (...){
+				_allocator.deallocate(newarr, n);
+				throw;
+			}
+			for(int i = 0; i < _size; i++){
+				_allocator.destroy(_first + i);
+			}
+			_allocator.deallocate(_first);
+			_first = newarr;
+			_capacity = _n;
+		}
+
+		void resize (size_type n, value_type val = value_type()){
+			if(n > _capacity)
+				reserve(n);
+			for(size_t i = 0; i < size; i++)
+				new (_first + i) T(va);
+			if (n < _size)
+				_size = n;
+				
+		}
 		
 		size_type capacity() const{
 			return (_capacity);
@@ -115,7 +142,6 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			return(_size == 0);
 		}
 		
-		void reserve (size_type n);
 		
 		//ELEMENT ACCESS
 		
@@ -128,10 +154,14 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 		
 		reference at (size_type n){
+			if(n > _capacity)
+				throw std::out_of_range("vector at out of range");
 			return(*this[n]);
 		}
 		
 		const_reference at (size_type n) const{
+			if(n > _capacity)
+				throw std::out_of_range("vector at out of range");
 			return(*this[n]);
 		}
 		
@@ -166,7 +196,9 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 
 		//single element
-		iterator insert (iterator position, const value_type& val);
+		iterator insert (iterator position, const value_type& val){
+			T* newarr = 
+		}
 
 		//fill
 		void insert (iterator position, size_type n, const value_type& val);
