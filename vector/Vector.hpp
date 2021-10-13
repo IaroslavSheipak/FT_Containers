@@ -122,14 +122,14 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			}
 			_allocator.deallocate(_first);
 			_first = newarr;
-			_capacity = _n;
+			_capacity = n;
 		}
 
 		void resize (size_type n, value_type val = value_type()){
 			if(n > _capacity)
 				reserve(n);
-			for(size_t i = 0; i < size; i++)
-				new (_first + i) T(va);
+			for(size_t i = 0; i < _size; i++)
+				new (_first + i) T(val);
 			if (n < _size)
 				_size = n;
 				
@@ -197,7 +197,21 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 
 		//single element
 		iterator insert (iterator position, const value_type& val){
-			T* newarr = 
+			T* newarr = _allocator.allocate(_size); 
+			iterator i;
+
+			for(i = begin(); i < position; i++)
+				new (newarr + i) T(_first + i);
+			new (newarr + position) T(_first + position);
+			for(i = position + 1; i < end(); i++)
+				new (newarr + i) T(_first + position);
+			for(int i = 0; i < _size; i++){
+				_allocator.destroy(_first + i);
+			}
+			_allocator.deallocate(_first);
+			_first = newarr;
+			//_capacity = _n;
+
 		}
 
 		//fill
