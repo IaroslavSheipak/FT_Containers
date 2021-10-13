@@ -120,7 +120,9 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			for(int i = 0; i < _size; i++){
 				_allocator.destroy(_first + i);
 			}
-			_allocator.deallocate(_first);
+			//without this if free error
+			if(_capacity != 0)
+				_allocator.deallocate(_first, _capacity);
 			_first = newarr;
 			_capacity = n;
 		}
@@ -198,20 +200,21 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		//single element
 		iterator insert (iterator position, const value_type& val){
 			T* newarr = _allocator.allocate(_size); 
-			iterator i;
+			size_t i;
 
-			for(i = begin(); i < position; i++)
-				new (newarr + i) T(_first + i);
-			new (newarr + position) T(_first + position);
-			for(i = position + 1; i < end(); i++)
-				new (newarr + i) T(_first + position);
+			for(i = 0; i < position - begin(); i++)
+				_allocator.construct(newarr + i, *(_first + i));  
+			_allocator.construct(newarr + (position - begin()), val);
+			for(i = (position - begin()) + 1; i < _size; i++)
+				_allocator.construct(newarr + i, *(_first + i));  
 			for(int i = 0; i < _size; i++){
 				_allocator.destroy(_first + i);
-			}
-			_allocator.deallocate(_first);
+			}	
+			//if(_capacity != 0)
+			//	_allocator.deallocate(_first, _capacity);
 			_first = newarr;
-			//_capacity = _n;
-
+			_size++;
+			return begin();
 		}
 
 		//fill
