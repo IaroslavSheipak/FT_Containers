@@ -18,8 +18,8 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		typedef const value_type& const_reference;
 		typedef typename Allocator::pointer pointer;
 		typedef typename Allocator::const_pointer const_pointer;
-		typedef ft::RandomAccessIterator<T> iterator;
-		typedef ft::ConstRandomAccessIterator<T> const_iterator;
+		typedef ft::RandomAccessIterator<false, T> iterator;
+		typedef ft::RandomAccessIterator<true, T> const_iterator;
 		//typedef ft::reverse_iterator<T> reverse_iterator;
 		//typedef ft::const_reverse_iterator<T> const_reverse_iterator;
 	private:
@@ -32,7 +32,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		//CONSTRUCTORS
 		
 		//default		
-		explicit vector (const allocator_type& alloc = allocator_type()) {}
+		explicit vector (const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0){}
 
 		//fill
 		explicit vector (size_type n, const value_type& val = value_type(),
@@ -106,7 +106,9 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		size_type max_size() const{
 			return(_allocator.max_size());
 		}
-		
+	
+	
+
 		void reserve (size_type n){
 			if (n < _capacity)
 				return;
