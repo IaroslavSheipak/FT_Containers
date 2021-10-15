@@ -18,25 +18,42 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		typedef const value_type& const_reference;
 		typedef typename Allocator::pointer pointer;
 		typedef typename Allocator::const_pointer const_pointer;
-		typedef ft::RandomAccessIterator<false, T> iterator;
-		typedef ft::RandomAccessIterator<true, T> const_iterator;
+		typedef ft::RandomAccessIterator<T> iterator;
+		typedef ft::RandomAccessIterator<const T> const_iterator;
 		//typedef ft::reverse_iterator<T> reverse_iterator;
 		//typedef ft::const_reverse_iterator<T> const_reverse_iterator;
 	private:
 		pointer		_first;
 		size_type 	_size, _capacity;
 		allocator_type	_allocator;
-
+		
+		template<class InputIt>
+		void Ucopy(InputIt first, InputIt last, InputIt dist){
+			dist += (last - first);
+			last--;
+			while (first < last && dist.base() != NULL)
+			{
+				_allocator.construct(dist.base(), *last);
+				last--;
+				dist--;
+			}
+			while (first < last)
+			{
+				*dist = *last;
+				last--;
+				dist--;
+			}
+		}
 
 	public:
 		//CONSTRUCTORS
 		
 		//default		
-		explicit vector (const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0){}
+		explicit vector (const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0), _allocator(alloc){}
 
 		//fill
 		explicit vector (size_type n, const value_type& val = value_type(),
-                 const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n)
+                 const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n), _allocator(alloc)
 		{
 			_first = _allocator.allocate(_capacity);
 			for(size_type i = 0; i < n; i++)
@@ -56,11 +73,20 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 
 		 }
 
+		//OPERATOR=
+		vector& operator= (const vector& x){
+			_capacity = x._capacity;
+			_size = x._size;
+			_allocator = x._allocator;
+			_first = _allocator.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++)
+				*(_first + i) = _allocator.construct(_first + i, x[i]);
+			return (*this);
+		}
+
 		//copy
-		vector (const vector& x) : _allocator(x._allocator), _size(x._size()), _capacity(x._capacity)
-		{
-			for(size_type i = 0; i < _size; i++)
-				_allocator.construct(_first + i, *(x._first + i));
+		vector (const vector& x){
+			*this = x;
 		}
 		
 		//DESTRUCTOR
@@ -76,8 +102,6 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 
 		
-		//OPERATOR=
-		vector& operator= (const vector& x);
 
 		//ITERATORS
 		iterator begin(){
@@ -160,29 +184,29 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		reference at (size_type n){
 			if(n > _capacity)
 				throw std::out_of_range("vector at out of range");
-			return(*this[n]);
+			return(*(_first + n));
 		}
 		
 		const_reference at (size_type n) const{
 			if(n > _capacity)
 				throw std::out_of_range("vector at out of range");
-			return(*this[n]);
+			return(*(_first + n));
 		}
 		
 		reference front(){
-			return(*this[0]);
+			return(*_first);
 		}
 		
 		const_reference front() const{
-			return(*this[0]);
+			return(*_first);
 		}
 		
 		reference back(){
-			return(*this[_size - 1]);
+			return(*(_first + _size - 1));
 		}
 		
 		const_reference back() const{
-			return(*this[_size - 1]);
+			return(*(_first + _size - 1));
 		}
 
 		//MODIFIERS
@@ -220,14 +244,36 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 
 		//fill
-		void insert (iterator position, size_type n, const value_type& val);
+		void insert (iterator position, size_type n, const value_type& val){
+			if (n == 0)
+				return ;
+			else if (max_size() - _size < n || position < begin())
+				throw std::length_error("vector");
+			if ((_size + n <= _capacity && position <= end()) || (position > end() && position - begin() + n <= _capacity))
+			{
+				Ucopy(position, end(), end() + n);
+				iterator tmp_end = position + n;
+				_size = position <= end() ? _size + n : position - begin() + n;
+				while (position != tmp_end)
+				{
+					*position = val;
+					position++;
+				}
+			}
+		}
 
 		//range
 		template <class InputIterator>
     		void insert (iterator position, InputIterator first, InputIterator last);
 
 		//single element
-		iterator erase (iterator position);
+		iterator erase (iterator position){
+			difference_type d = std::distance(begin(), position);
+			std::copy(position + 1, end(), position);
+			_size--;
+			_allocator.destroy(_first + _size - 1);
+			return (d == _size ? end() : iterator(_first + d));
+		}
 
 		//range
 		iterator erase (iterator first, iterator last);
