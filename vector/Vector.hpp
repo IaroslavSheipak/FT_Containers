@@ -1,6 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include <memory>
+#include <iterator>
 #include "../iterator/iterator.hpp"
 
 namespace ft{
@@ -65,10 +66,11 @@ template < class T, class Allocator = std::allocator<T> > class vector{
         	 vector (InputIterator first, InputIterator last,
                  const allocator_type& alloc = allocator_type())
 		 {
-			difference_type dist = std::distance(first, last);
-			_first = _allocator.allocate(dist);
+			_size = last - first;
+			 //	difference_type dist = std::distance(first, last);
+			_first = _allocator.allocate(_size);
 
-			for(difference_type i = 0; i < dist; i++)
+			for(difference_type i = 0; i < _size; i++)
 				_allocator.construct(_first + i, *(first + i));
 
 		 }
@@ -80,7 +82,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			_allocator = x._allocator;
 			_first = _allocator.allocate(_capacity);
 			for (size_type i = 0; i < _size; i++)
-				*(_first + i) = _allocator.construct(_first + i, x[i]);
+				_allocator.construct(_first + i, x[i]);
 			return (*this);
 		}
 
@@ -289,6 +291,43 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			return(_allocator);
 		}
 };
+
+	template< class T, class Alloc >
+	bool operator==( const std::vector<T,Alloc>& lhs,
+			                 const std::vector<T,Alloc>& rhs ){
+
+	}
+
+	template< class T, class Alloc >
+	bool operator!=( const std::vector<T,Alloc>& lhs,
+		                 const std::vector<T,Alloc>& rhs ){
+
+
+	}
+
+	template< class T, class Alloc >
+	bool operator<( const std::vector<T,Alloc>& lhs,
+		                const std::vector<T,Alloc>& rhs ){
+
+	}
+	
+	template< class T, class Alloc >
+	bool operator<=( const std::vector<T,Alloc>& lhs,
+		                 const std::vector<T,Alloc>& rhs ){
+
+	}
+	
+	template< class T, class Alloc >
+	bool operator>( const std::vector<T,Alloc>& lhs,
+		                const std::vector<T,Alloc>& rhs ){
+
+	}
+
+	template< class T, class Alloc >
+	bool operator>=( const std::vector<T,Alloc>& lhs,
+		                 const std::vector<T,Alloc>& rhs ){
+
+	}
 
 
 };

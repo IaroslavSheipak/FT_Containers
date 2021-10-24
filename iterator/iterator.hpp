@@ -33,10 +33,10 @@ template< typename T>class RandomAccessIterator
 		//typename conditional<IsConst, const T*, T*>::type  _testptr;
 		pointer _ptr;
 		//CONSTRUCTORS
+	public:
 		RandomAccessIterator(pointer a){
 			_ptr = a;
 		}
-	public:
 		pointer base(void) const{
 			return _ptr;
 		}
