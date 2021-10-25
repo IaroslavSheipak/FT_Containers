@@ -30,17 +30,12 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		
 		template<class InputIt>
 		void Ucopy(InputIt first, InputIt last, InputIt dist){
-			dist += (last - first);
+			dist += last - first - 1;
 			last--;
-			while (first < last && dist.base() != NULL)
+			while (last >= first)
 			{
+				_allocator.destroy(dist.base());
 				_allocator.construct(dist.base(), *last);
-				last--;
-				dist--;
-			}
-			while (first < last)
-			{
-				*dist = *last;
 				last--;
 				dist--;
 			}
@@ -56,7 +51,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		explicit vector (size_type n, const value_type& val = value_type(),
                  const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n), _allocator(alloc)
 		{
-			_first = _allocator.allocate(_capacity);
+			_first = _allocator.allocate(n);
 			for(size_type i = 0; i < n; i++)
 				_allocator.construct(_first + i, val);
 		}
@@ -64,19 +59,20 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		//range
 		template <class InputIterator>
         	 vector (InputIterator first, InputIterator last,
-                 const allocator_type& alloc = allocator_type())
-		 {
+                 const allocator_type& alloc = allocator_type()){
+			if (first > last)
+				throw std::length_error("vector");
 			_size = last - first;
-			 //	difference_type dist = std::distance(first, last);
-			_first = _allocator.allocate(_size);
-
-			for(difference_type i = 0; i < _size; i++)
+			_capacity = _size;
+			_first = _allocator.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++)
 				_allocator.construct(_first + i, *(first + i));
-
 		 }
 
 		//OPERATOR=
 		vector& operator= (const vector& x){
+			if (_capacity != 0)
+				_allocator.deallocate(_first, _capacity);
 			_capacity = x._capacity;
 			_size = x._size;
 			_allocator = x._allocator;
@@ -94,13 +90,10 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		//DESTRUCTOR
 		~vector()
 		{
-			if(_first != 0)
-			{
-				for(size_type i = 0; i < _size; i++)
-					_allocator.destroy(_first + i);
-				if(_capacity != 0)
-					_allocator.deallocate(_first, _capacity);
-			}
+			for (size_type i = 0; i < _size; i++)
+				_allocator.destroy(_first + i);
+			if(_capacity)
+				_allocator.deallocate(_first, _capacity);
 		}
 
 		
@@ -132,36 +125,45 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		size_type max_size() const{
 			return(_allocator.max_size());
 		}
-	
-	
 
 		void reserve (size_type n){
 			if (n < _capacity)
 				return;
-			T* newarr = _allocator.allocate(n);
+			pointer newarr = _allocator.allocate(n);
 			try{
-				std::uninitialized_copy(_first, _first + _size, newarr);
-			} catch (...){
+				for (size_type i = 0; i < _size; i++)
+					_allocator.construct(newarr + i, *(_first + i));
+			} catch (std::exception &e){
+				size_type i = 0;
+				while (newarr + i != NULL && i < _size){
+					_allocator.destroy(newarr + i);
+					i++;
+				}
 				_allocator.deallocate(newarr, n);
 				throw;
 			}
-			for(int i = 0; i < _size; i++){
+			for(int i = 0; i < _size; i++)
 				_allocator.destroy(_first + i);
-			}
-			//without this if free error
-			if(_capacity != 0)
+			if(_capacity)
 				_allocator.deallocate(_first, _capacity);
-			_first = newarr;
 			_capacity = n;
+			_first = newarr;
 		}
 
 		void resize (size_type n, value_type val = value_type()){
-			if(n > _capacity)
-				reserve(n);
-			for(size_t i = 0; i < _size; i++)
-				new (_first + i) T(val);
-			if (n < _size)
+			if(n < _size){
+				for(size_type i = n; i < _size; i++)
+					_allocator.destroy(_first + i);
 				_size = n;
+			}
+			else if (n > _size){
+				if (_capacity < n)
+					this->reserve(_capacity * 2 > n ? _capacity * 2 : n);
+				for (size_type i = _size; i < n; i++){
+					_allocator.construct(_first + i, val);
+					_size++;
+				}
+			}
 				
 		}
 		
@@ -213,36 +215,63 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 
 		//MODIFIERS
 		template <class InputIterator>
-  			void assign (InputIterator first, InputIterator last);
+  			void assign (InputIterator first, InputIterator last){
+				if(first > last)
+					throw std::logic_error("vector");
+				difference_type count = last - first;
+				clear();
+				if (count > static_cast<difference_type>(capacity())){
+					_allocator.deallocate(_first, _capacity);
+					_first = _allocator.allocate(count);
+					_capacity = count;
+				}
+				iterator pos = begin();
+				while (first < last)
+				{
+					_allocator.construct(pos.base(), *first);
+					pos++;
+					first++;
+				}
+				_size = count;
+			}
 
-		void assign (size_type n, const value_type& val);
+		void assign (size_type n, const value_type& val){
+			clear();
+			if (n > _capacity()){
+				_allocator.deallocate(_first, _capacity);
+				_first = _allocator.allocate(n);
+				_capacity = n;
+			}
+			for (size_type i = 0; i < n; i++)
+				_allocator.construct(_first + i, val);
+			_size = n;
+		}
 		
 		void push_back (const value_type& val){
-			*this->insert(end() - 1, val);
+			if(_size == _capacity)
+				reserve(_capacity == 0 ? 1 : _capacity * 2);
+			_allocator.construct(_first + _size, val);
+			_size++;
 		}
 
 		void pop_back(){
-			*this->erase(end() - 1);
+			_allocator.destroy(_first + _size - 1);
+			_size--;
 		}
 
 		//single element
 		iterator insert (iterator position, const value_type& val){
-			T* newarr = _allocator.allocate(_size); 
-			size_t i;
-
-			for(i = 0; i < position - begin(); i++)
-				_allocator.construct(newarr + i, *(_first + i));  
-			_allocator.construct(newarr + (position - begin()), val);
-			for(i = (position - begin()) + 1; i < _size; i++)
-				_allocator.construct(newarr + i, *(_first + i));  
-			for(int i = 0; i < _size; i++){
-				_allocator.destroy(_first + i);
-			}	
-			//if(_capacity != 0)
-			//	_allocator.deallocate(_first, _capacity);
-			_first = newarr;
+			if (position < begin() || position > end())
+				throw std::logic_error("vector");
+			difference_type start = position - begin();
+			if (_size + 1 > _capacity)
+				reserve(_capacity == 0 ? 1 : _capacity * 2);
+			position = begin() + start;
+			Ucopy(position, end(), position + 1);
+			if (position.base())
+				_allocator.destroy(position.base());
+			_allocator.construct(position.base(), val);
 			_size++;
-			return begin();
 		}
 
 		//fill
@@ -251,22 +280,39 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 				return ;
 			else if (max_size() - _size < n || position < begin())
 				throw std::length_error("vector");
-			if ((_size + n <= _capacity && position <= end()) || (position > end() && position - begin() + n <= _capacity))
-			{
-				Ucopy(position, end(), end() + n);
-				iterator tmp_end = position + n;
-				_size = position <= end() ? _size + n : position - begin() + n;
-				while (position != tmp_end)
-				{
-					*position = val;
-					position++;
-				}
+			difference_type start = position - begin();
+			if (_size + n > _capacity)
+				reserve(_capacity * 2 >= _size + n ? _capacity * 2 : _size + n);
+			position = begin() + start;
+			Ucopy(position, end(), position + n);
+			for (size_type i = 0; i < n; i++){
+				if ((position + i).base())
+					_allocator.destroy((position + i).base());
+				_allocator.construct((position + i).base(), val);
 			}
+			_size += n;
 		}
 
 		//range
 		template <class InputIterator>
-    		void insert (iterator position, InputIterator first, InputIterator last);
+    		void insert (iterator position, InputIterator first, InputIterator last){
+				if (position < begin() || position > end() || first > last)
+					throw std::logic_error("vector");
+				difference_type start = position - begin();
+				difference_type count = last - first;
+				if (_size + count > _capacity)
+					reserve(_capacity * 2 >= _size + count ? _capacity * 2 : _size + count);
+				position = begin() + start;
+				Ucopy(position, end(), position + count);
+				while (first < last){
+					if (position.base())
+						_allocator.destroy(position.base());
+					_allocator.construct(position.base(), *first);
+					position++;
+					first++;
+				}
+				_size += count;
+			}
 
 		//single element
 		iterator erase (iterator position){
@@ -278,12 +324,38 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 
 		//range
-		iterator erase (iterator first, iterator last);
+		iterator erase (iterator first, iterator last){
+			difference_type start = std::distance(begin(), first);
+			difference_type need_to_copy = std::distance(last, end());
+			bool last_is_end = (last == end());
+			while (first != last){
+				_allocator.destroy(first.base());
+				first++;
+			}
+			size_type i = start;
+			while (last < end()){
+				if (this->_first + start)
+					_allocator.destroy(_first + i);
+				_allocator.construct(_first + i, *last);
+				i++;
+				last++;
+			}
+			for (size_type i = start + need_to_copy; i < _size; i++)
+				_allocator.destroy(_first + i);
+			_size = start + need_to_copy;
+			return last_is_end ? end() : iterator(_first + start);
+		}
 		
-		void swap (vector& x);
+		void swap (vector& x){
+			pointer tmp = _first;
+			_first = x._first;
+			x._first = tmp;
+		}
 
 		void clear(){
-			erase(front(), back());
+			for (size_type i = 0; i < _size; i++)
+				_allocator.destroy(_first + i);
+			_size = 0;
 		}
 
 		//ALLOCATOR
@@ -295,40 +367,49 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 	template< class T, class Alloc >
 	bool operator==( const std::vector<T,Alloc>& lhs,
 			                 const std::vector<T,Alloc>& rhs ){
-
+		if (lhs.size() != rhs.size())
+			return false;
+		for (size_t i = 0; i < rhs.size(); i++)
+			if (lhs[i] != rhs[i])
+				return false;
+		return true;
 	}
 
 	template< class T, class Alloc >
 	bool operator!=( const std::vector<T,Alloc>& lhs,
 		                 const std::vector<T,Alloc>& rhs ){
-
-
+		return !(lhs == rhs);
 	}
 
 	template< class T, class Alloc >
 	bool operator<( const std::vector<T,Alloc>& lhs,
 		                const std::vector<T,Alloc>& rhs ){
-
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	}
 	
 	template< class T, class Alloc >
 	bool operator<=( const std::vector<T,Alloc>& lhs,
 		                 const std::vector<T,Alloc>& rhs ){
-
+		return !(lhs > rhs);
 	}
 	
 	template< class T, class Alloc >
 	bool operator>( const std::vector<T,Alloc>& lhs,
 		                const std::vector<T,Alloc>& rhs ){
-
+		return rhs < lhs;
 	}
 
 	template< class T, class Alloc >
 	bool operator>=( const std::vector<T,Alloc>& lhs,
 		                 const std::vector<T,Alloc>& rhs ){
-
+		return !(lhs < rhs);
 	}
 
+	
+	template< class T, class Alloc >
+	void swap( std::vector<T,Alloc>& lhs, std::vector<T,Alloc>& rhs ) {
+		lhs.swap(rhs);
+	}
 
 };
 #endif
