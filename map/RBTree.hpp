@@ -4,7 +4,7 @@ struct Node{
 	Node*	parent;
 	Node*	left;
 	Node*	right;	
-	Color	color;
+	bool	red;
 }
 
 struct Nil{};
@@ -20,3 +20,5 @@ class RBTree{
 		}
 
 }
+
+
