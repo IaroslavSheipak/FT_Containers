@@ -36,11 +36,12 @@ class RBTree{
 	   	//typedef const_reverse_iterator;
 		//typedef difference_type;	
 	private:
-		typedef Node<value_type> Node;
-		typedef Node* link_type;
-		Node	*_nil;
-		Node	*_header;
-		Node 	*root;
+		typedef Node<value_type>	Node;
+		typedef Node*				link;
+		key_compare 				_compare;
+		link						_nil;
+		link						_header;
+		link						_root;
 		
 		//HELPER FUNCTIONS
 		void 	_rotate_right(Node *node){
@@ -70,6 +71,23 @@ class RBTree{
 			else
 				right(node->parent) = tmp;
 		}
+		//PUBLIC FUNCTIONS
+	public:
+		link	search(const value_type &val) const
+		{
+			link x;
+			x = _root;
+			while (x != _nil){
+				if (!_compare(value(x), val) && !_compare(val, value(x)))
+					break;
+				else if (_compare(val, value(x))
+					x = left(x);
+				else
+					x = right(x);
+			}
+			return (x);
+		}
+
 
 
 }
