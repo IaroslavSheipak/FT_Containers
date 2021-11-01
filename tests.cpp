@@ -1,8 +1,10 @@
 #include "../ft_containers/vector/Vector.hpp"
-//#include "../ft_containers/iterator/iterator.hpp"
+#include "../ft_containers/iterator/iterator.hpp"
+#include <chrono>
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <cassert>
 
 void who_won(std::string name_of_test, std::chrono::duration<double> my_dur, std::chrono::duration<double> stl_dur) {
 	std::cout << name_of_test << "!!!!!!!!!!!" << std::endl;
@@ -19,7 +21,7 @@ void who_won(std::string name_of_test, std::chrono::duration<double> my_dur, std
 void test_push_back() {
 	std::vector<int> v1;
 	ft::vector<int> v2;
-	std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double> > start, end;
+	std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double> > start, end;
 
 	start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 40; i++)
@@ -39,7 +41,7 @@ void test_push_back() {
 void test_pop_back() {
 	std::vector<int> v1(50, 2);
 	ft::vector<int> v2(50, 2);
-	std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double> > start, end;
+	std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double> > start, end;
 
 	start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 40; i++)
@@ -59,7 +61,7 @@ void test_pop_back() {
 void test_reserve() {
 	std::vector<int> v1(50, 2);
 	ft::vector<int> v2(50, 2);
-	std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double> > start, end;
+	std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double> > start, end;
 
 	start = std::chrono::high_resolution_clock::now();
 	v1.reserve(100);
@@ -139,43 +141,39 @@ void test_vec_comparison() {
 //
 void test_iterators(){
 	
-//	std::vector<int>::iterator iter;
-//	std::vector<int>::const_iterator const_iter;
 //
 	ft::vector<int>::iterator	iter;
 	ft::vector<int>::const_iterator	const_iter;
 	
-	iter = const_iter;
-	const_iter = iter;
-//	assert(iter == const_iter);
-//	assert(iter != const_iter);
-//	std::cout << *iter << std::endl;
-//	//iter->m
-//	*iter = 5;
-//	++iter;
-//	iter++;
-//	*iter++;
-//	--iter;
-//	iter--;
-//	*iter--;
-//	iter + 5;
-//	5 + iter;
-//	iter - 5;
-//	iter - const_iter;
-//	iter < const_iter;
-//	iter > const_iter;
-//	iter <= const_iter;
-//	iter >= const_iter;
-//	iter += 5;
-//	iter -= 5;
-//	iter[5];
-//
-	
-
+	const_iter=iter;
+	assert(iter == const_iter);
+	assert(iter != const_iter);
+	std::cout << *iter << std::endl;
+	*iter = 5;
+	++iter;
+	iter++;
+	*iter++;
+	--iter;
+	iter--;
+	*iter--;
+	iter + 5;
+	5 + iter;
+	iter - 5;
+	iter - const_iter;
+	assert(iter < const_iter);
+	assert(iter > const_iter);
+	assert(iter <= const_iter);
+	assert(iter >= const_iter);
+	iter += 5;
+	iter -= 5;
+	iter[5];
 
 	
 
 
+	
+
+	
 }
 
 //void	test_erase() {
