@@ -21,7 +21,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		typedef typename Allocator::pointer pointer;
 		typedef typename Allocator::const_pointer const_pointer;
 		typedef ft::RandomAccessIterator<T, false> iterator;
-		typedef ft::RandomAccessIterator<const T, true> const_iterator;
+		typedef ft::RandomAccessIterator<T, true> const_iterator;
 		//typedef ft::reverse_iterator<T> reverse_iterator;
 		//typedef ft::const_reverse_iterator<T> const_reverse_iterator;
 	private:
@@ -284,8 +284,9 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			difference_type start = position - begin();
 			if (_size + n > _capacity)
 				reserve(_capacity * 2 >= _size + n ? _capacity * 2 : _size + n);
-			position = begin() + start;
-			Ucopy(position, end(), position + n);
+			position = _first + start;
+			//Ucopy(position, end(), position + n);
+			std::uninitialized_copy(position, end(), position + n);
 			for (size_type i = 0; i < n; i++){
 				if ((position + i).base())
 					_allocator.destroy((position + i).base());
@@ -296,7 +297,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 
 		//range
 		template <class InputIterator>
-    		void insert (iterator position, InputIterator first, InputIterator last){
+    		void insert (iterator position, InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value>::type* = 0){
 				if (position < begin() || position > end() || first > last)
 					throw std::logic_error("vector");
 				difference_type start = position - begin();
