@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cassert>
 
-
+/*
 void test_push_back() {
 	ft::vector<int> v1;
 	ft::vector<int> v2;
@@ -84,16 +84,6 @@ void test_vec_comparison() {
 //	}
 //}
 //
-void test_insert(){
-
-	ft::vector<int> vec;
-
-	for (int i = 0; i < 40000; i++)
-	{
-		vec.insert(vec.begin(), 1, 1);
-		std::cout << vec[0] << std::endl;
-	}
-}
 
 void test_iterators(){
 	
@@ -146,11 +136,20 @@ void test_iterators(){
 //		std::cout << "some error happened: " << e.what() << std::endl;
 //	}
 //}
+*/
 
+void test_insert(){
+
+	ft::vector<int> vec;
+
+	//for (int i = 0; i < 40000; i++)
+	//{
+		vec.insert(vec.begin(), 1);
+	//}
+}
 
 int main()
 {
-	
 	//test_iterators();
 	//test_reserve();
 	test_insert();
