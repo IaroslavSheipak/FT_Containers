@@ -44,7 +44,7 @@ class RBTree{
 		link						_root;
 		
 		//HELPER FUNCTIONS
-		void 	_rotate_right(Node *node){
+		void 	_rotate_right(link	node){
 			link_type y;
 
 			y = left(node);
@@ -58,7 +58,7 @@ class RBTree{
 				left(node->parent) = tmp;
 			
 		}
-		void 	_rotate_left(Node *node){
+		void 	_rotate_left(link	node){
 			link_type y;
 
 			y = right(node);
@@ -70,6 +70,14 @@ class RBTree{
 				left(node->parent) = tmp;
 			else
 				right(node->parent) = tmp;
+		}
+		void	_insert(link	z){
+			link y = _nil;
+			x = _root;
+			while (x != _nil){
+				y = x;
+				if (z.value < x.value)
+			}
 		}
 		//PUBLIC FUNCTIONS
 	public:

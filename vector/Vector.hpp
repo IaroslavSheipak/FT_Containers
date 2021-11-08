@@ -4,6 +4,7 @@
 //#include <iterator>
 #include "../utility/utility.hpp"
 #include "../iterator/iterator.hpp"
+#include "../iterator/reverse_iterator.hpp"
 
 namespace ft{
 
@@ -22,8 +23,8 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		typedef typename Allocator::const_pointer const_pointer;
 		typedef ft::RandomAccessIterator<T, false> iterator;
 		typedef ft::RandomAccessIterator<T, true> const_iterator;
-		//typedef ft::reverse_iterator<T> reverse_iterator;
-		//typedef ft::const_reverse_iterator<T> const_reverse_iterator;
+		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	private:
 		pointer		_first;
 		size_type 	_size, _capacity;
@@ -112,10 +113,18 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		const_iterator end() const{
 			return (const_iterator(_first + _size));
 		}
-		/*reverse_iterator rbegin();
-		const_reverse_iterator rbegin() const;
-		reverse_iterator rend();
-		const_reverse_iterator rend() const;*/
+		reverse_iterator rbegin(){
+			return (reverse_iterator(end()));
+		}
+		const_reverse_iterator rbegin() const{
+			return (const_reverse_iterator(end()));
+		}
+		reverse_iterator rend(){
+			return (reverse_iterator(begin()));
+		}
+		const_reverse_iterator rend() const{
+			return (const_reverse_iterator(begin()));
+		}
 		
 		//CAPACITY
 		
@@ -261,20 +270,54 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 
 		//single element
-		iterator insert (iterator position, const value_type& val){
+		/*iterator insert (iterator position, const value_type& val){
 			if (position < begin() || position > end())
 				throw std::logic_error("vector");
 			difference_type start = position - begin();
 			if (_size + 1 > _capacity)
-				reserve(_capacity == 0 ? 1 : _capacity * 2);
+				reserve(_capacity * 2 + (_capacity == 0));
 			position = begin() + start;
-			Ucopy(position, end(), position + 1);
+			//Ucopy(position, end(), position + 1);
+			std::uninitialized_copy(position, end(), position + 1);
 			if (position.base())
 				_allocator.destroy(position.base());
 			_allocator.construct(position.base(), val);
 			_size++;
-		}
-
+			return (position);
+		}*/
+		
+		//single element
+		iterator insert (iterator position, const value_type& val){
+			if (position < begin() || position > end())
+				throw std::logic_error("vector");
+			size_type n = _size == _capacity ? _capacity * 2 + (_capacity == 0) : _capacity;
+			pointer newarr = _allocator.allocate(n);
+			try{
+				size_type i = 0;
+				for (i = 0; i < position - begin(); ++i)
+					_allocator.construct(newarr + i, *(_first + i));
+				_allocator.construct(newarr + i, val);
+				i++;
+				for(; i < end() - position; i++)
+					_allocator.construct(newarr + i, *(_first + i - 1));
+			} catch (std::exception &e){
+				size_type i = 0;
+				while (newarr + i != NULL && i < _size){
+					_allocator.destroy(newarr + i);
+					i++;
+				}
+				_allocator.deallocate(newarr, n);
+				throw;
+			}
+			for(int i = 0; i < _size; i++)
+				_allocator.destroy(_first + i);
+			if(_capacity)
+				_allocator.deallocate(_first, _capacity);
+			_capacity = n;
+			_first = newarr;
+			_size++;
+			return 0;//(_first + position);
+			}
 		//fill
 		void insert (iterator position, size_type n, const value_type& val){
 			if (n == 0)

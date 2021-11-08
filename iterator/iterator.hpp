@@ -45,10 +45,10 @@ template< typename T, bool IsConst>class RandomAccessIterator
 
 		//COMPARISON OPERATORS
 		bool operator==(const RandomAccessIterator<T, true> & rhs) const{
-			return (*_ptr == *rhs.base());
+			return (_ptr == rhs.base());
 		}
 		bool operator==(const RandomAccessIterator<T, false> & rhs) const{
-			return (*_ptr == *rhs.base());
+			return (_ptr == rhs.base());
 		}
 		bool operator!=(const RandomAccessIterator<T, true> & rhs) const{
 			return (!(*this == rhs));
@@ -105,7 +105,7 @@ template< typename T, bool IsConst>class RandomAccessIterator
 			return (_ptr + a);
 		}
 	
-		RandomAccessIterator operator-(const difference_type & a){
+		RandomAccessIterator operator-(const difference_type & a) const{
 			return(_ptr - a);
 		}
 		difference_type operator-(const RandomAccessIterator<T,true> & b){
