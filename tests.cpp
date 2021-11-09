@@ -1,15 +1,20 @@
+#ifdef yarik
 #include "../ft_containers/vector/Vector.hpp"
 #include "../ft_containers/iterator/iterator.hpp"
-#include <chrono>
+#endif
+#ifdef kirill
+#include "../ft_containers/stack/stack.hpp"
+#endif
+#include <time.h>
 #include <vector>
 #include <iostream>
 #include <algorithm>
 #include <cassert>
 
-void who_won(std::string name_of_test, std::chrono::duration<double> my_dur, std::chrono::duration<double> stl_dur) {
+void who_won(std::string name_of_test, clock_t my_dur, clock_t stl_dur) {
 	std::cout << name_of_test << "!!!!!!!!!!!" << std::endl;
-	std::cout << std::fixed << "stl vector: " << stl_dur.count() << std::endl;
-	std::cout << std::fixed << "your vector: " << my_dur.count() << std::endl;
+	std::cout << std::fixed << "stl vector: " << stl_dur << std::endl;
+	std::cout << std::fixed << "your vector: " << my_dur << std::endl;
 	double res = my_dur / stl_dur;
 	std::cout << std::fixed << "your_res = " << res << " stl_res, ";
 	if (res <= 1)
@@ -21,19 +26,19 @@ void who_won(std::string name_of_test, std::chrono::duration<double> my_dur, std
 void test_push_back() {
 	std::vector<int> v1;
 	ft::vector<int> v2;
-	std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double> > start, end;
+	clock_t start, end;
 
-	start = std::chrono::high_resolution_clock::now();
+	start = clock();
 	for (int i = 0; i < 40; i++)
 		v1.push_back(i);
-	end = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> stl_duration = end - start;
+	end = clock();
+	clock_t stl_duration = end - start;
 
-	start = std::chrono::high_resolution_clock::now();
+	start = clock();
 	for (int i = 0; i < 40; i++)
 		v2.push_back(i);
-	end = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> my_duration = end - start;
+	end = clock();
+	clock_t my_duration = end - start;
 
 	who_won("PUSH_BACK TEST" , my_duration, stl_duration);
 }
@@ -41,19 +46,19 @@ void test_push_back() {
 void test_pop_back() {
 	std::vector<int> v1(50, 2);
 	ft::vector<int> v2(50, 2);
-	std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double> > start, end;
+	clock_t start, end;
 
-	start = std::chrono::high_resolution_clock::now();
+	start = clock();
 	for (int i = 0; i < 40; i++)
 		v1.pop_back();
-	end = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> stl_duration = end - start;
+	end = clock();
+	clock_t stl_duration = end - start;
 
-	start = std::chrono::high_resolution_clock::now();
+	start = clock();
 	for (int i = 0; i < 40; i++)
 		v2.pop_back();
-	end = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> my_duration = end - start;
+	end = clock();
+	clock_t my_duration = end - start;
 
 	who_won("POP_BACK TEST" , my_duration, stl_duration);
 }
@@ -61,17 +66,17 @@ void test_pop_back() {
 void test_reserve() {
 	std::vector<int> v1(50, 2);
 	ft::vector<int> v2(50, 2);
-	std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double> > start, end;
+	clock_t start, end;
 
-	start = std::chrono::high_resolution_clock::now();
+	start = clock();
 	v1.reserve(100);
-	end = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> stl_duration = end - start;
+	end = clock();
+	clock_t stl_duration = end - start;
 
-	start = std::chrono::high_resolution_clock::now();
+	start = clock();
 	v2.reserve(100);
-	end = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> my_duration = end - start;
+	end = clock();
+	clock_t my_duration = end - start;
 
 	who_won("RESERVE TEST" , my_duration, stl_duration);
 }
@@ -131,14 +136,38 @@ void test_vec_comparison() {
 //	}
 //}
 //
-//void test_insert(){
-//
-//	ft::vector<int> vec;
-//
-//	vec.insert(vec.capacity(), 1, 1);
-//
-//}
-//
+
+
+
+
+
+void test_insert(){
+
+	std::vector<int> std_vec;
+	ft::vector<int> ft_vec;
+	clock_t start, end;
+	clock_t ft_time, std_time;
+
+	start = clock();
+	for (int i = 0; i < 40000; i++)
+		std_vec.insert(std_vec.begin(), 1);
+	end = clock();
+	std_time = end - start;
+	std::cout << "std vec time:" << std_time << std::endl;
+	start = clock();
+	for (int i = 0; i < 40000; i++)
+		ft_vec.insert(ft_vec.begin(), 1);
+	end = clock();
+	ft_time = end - start;
+	std::cout << "ft vec time:" << ft_time << std::endl;
+	std::cout << "\033[1;31myour vec is slower as " << ft_time / std_time << " \033[0m"<< std::endl;
+}
+
+
+
+
+
+
 void test_iterators(){
 	
 //
@@ -147,7 +176,6 @@ void test_iterators(){
 	
 	const_iter=iter;
 	assert(iter == const_iter);
-	assert(iter != const_iter);
 	std::cout << *iter << std::endl;
 	*iter = 5;
 	++iter;
@@ -167,13 +195,6 @@ void test_iterators(){
 	iter += 5;
 	iter -= 5;
 	iter[5];
-
-	
-
-
-	
-
-	
 }
 
 //void	test_erase() {
@@ -195,8 +216,8 @@ void test_iterators(){
 int main()
 {
 	
-	test_iterators();
+	//test_iterators();
 	//test_reserve();
-	//test_insert();
+	test_insert();
 	return (0);
 }
