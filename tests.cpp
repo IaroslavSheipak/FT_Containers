@@ -10,6 +10,18 @@
 #include <iostream>
 #include <algorithm>
 #include <cassert>
+# define B_CYAN "\x1b[46;1m" <<
+# define B_RED  "\x1b[41;1m" <<
+# define YELLOW "\x1b[33;1m" <<
+# define RED    "\x1b[31;1m" <<
+# define GREEN  "\x1b[32;1m" <<
+# define DEFAULT << "\x1b[m"
+
+
+void time(clock_t end, clock_t start){
+	
+	std::cout << GREEN end - start << std::endl DEFAULT;
+}
 
 void who_won(std::string name_of_test, clock_t my_dur, clock_t stl_dur) {
 	std::cout << name_of_test << "!!!!!!!!!!!" << std::endl;
@@ -139,8 +151,6 @@ void test_vec_comparison() {
 
 
 
-
-
 void test_insert(){
 
 	std::vector<int> std_vec;
@@ -153,12 +163,14 @@ void test_insert(){
 		std_vec.insert(std_vec.begin(), 1);
 	end = clock();
 	std_time = end - start;
+	time(end, start);
 	std::cout << "std vec time:" << std_time << std::endl;
 	start = clock();
 	for (int i = 0; i < 40000; i++)
 		ft_vec.insert(ft_vec.begin(), 1);
 	end = clock();
 	ft_time = end - start;
+	time(end, start);
 	std::cout << "ft vec time:" << ft_time << std::endl;
 	std::cout << "\033[1;31myour vec is slower as " << ft_time / std_time << " \033[0m"<< std::endl;
 }
