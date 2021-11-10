@@ -290,33 +290,29 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		iterator insert (iterator position, const value_type& val){
 			if (position < begin() || position > end())
 				throw std::logic_error("vector");
-			size_type n = _size == _capacity ? _capacity * 2 + (_capacity == 0) : _capacity;
-			pointer newarr = _allocator.allocate(n);
-			try{
-				size_type i = 0;
-				for (i = 0; i < position - begin(); ++i)
-					_allocator.construct(newarr + i, *(_first + i));
-				_allocator.construct(newarr + i, val);
-				i++;
-				for(; i < end() - position; i++)
-					_allocator.construct(newarr + i, *(_first + i - 1));
-			} catch (std::exception &e){
-				size_type i = 0;
-				while (newarr + i != NULL && i < _size){
-					_allocator.destroy(newarr + i);
-					i++;
-				}
-				_allocator.deallocate(newarr, n);
-				throw;
+			difference_type start = position - begin();
+			if (_size == _capacity){
+				_capacity = _capacity * 2 + (_capacity == 0);
+				pointer new_arr = _allocator.allocate(_capacity);
+				std::uninitialized_copy(begin(), position, iterator(new_arr));
+				_allocator.construct(new_arr + start, val);
+				std::uninitialized_copy(position, end(), iterator(new_arr + start + 1));
+				for (size_t i = 0; i < _size; i++)
+					_allocator.destroy(_first + i);
+				_allocator.deallocate(_first, _size);
+				_size++;
+				_first = new_arr;
 			}
-			for(int i = 0; i < _size; i++)
-				_allocator.destroy(_first + i);
-			if(_capacity)
-				_allocator.deallocate(_first, _capacity);
-			_capacity = n;
-			_first = newarr;
-			_size++;
-			return 0;//(_first + position);
+			else {
+				for (size_type i = _size; i > start; i--){
+					_allocator.destroy(_first + i);
+					_allocator.deallocate(_first, _size);
+				}
+				_allocator.destroy(position.base());
+				_allocator.construct(position.base(), val);
+				_size++;
+				}
+				return (begin() + start);
 			}
 		//fill
 		void insert (iterator position, size_type n, const value_type& val){
@@ -325,17 +321,27 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			else if (max_size() - _size < n || position < begin())
 				throw std::length_error("vector");
 			difference_type start = position - begin();
-			if (_size + n > _capacity)
-				reserve(_capacity * 2 >= _size + n ? _capacity * 2 : _size + n);
-			position = _first + start;
-			//Ucopy(position, end(), position + n);
-			std::uninitialized_copy(position, end(), position + n);
-			for (size_type i = 0; i < n; i++){
-				if ((position + i).base())
-					_allocator.destroy((position + i).base());
-				_allocator.construct((position + i).base(), val);
+			if (_size + n > _capacity){
+				size_type new_cap = _capacity * 2 >= _size + n ? _capacity * 2 : _size + n;
+				pointer new_arr = _allocator.allocate(new_cap);
+				std::uninitialized_copy(begin(), position, iterator(new_arr));
+				for (size_type i = 0; i < n; i++)
+					_allocator.construct(new_arr + start + i, val);
+				std::uninitialized_copy(position, end(), iterator(new_arr + start + n));
+				for (size_type i = 0; i < _size; i++)
+					_allocator.destroy(_first + i);
+				_allocator.deallocate(_first, _capacity);
+				_size += n;
+				_capacity = new_cap;
+				_first = new_arr;
 			}
-			_size += n;
+			else {
+				for (size_type i = _size; i > start; i--) {
+					_allocator.destroy(_first + i + n);
+					_allocator.construct(_first + start + i, val);
+				}
+				_size += n;
+			}
 		}
 
 		//range
