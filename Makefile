@@ -5,4 +5,4 @@ else
 endif
 
 all:
-	g++ -D $(TEST_FLAG) vector_tests.cpp
+	clang++ -g -D $(TEST_FLAG) vector_tests.cpp

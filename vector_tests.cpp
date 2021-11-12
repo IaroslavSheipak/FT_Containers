@@ -164,26 +164,30 @@ void test_insert(){
 
 
 
-void test_iterators(){
+template<class Iter, class ConstIter>
+void test_iterators(Iter iter, ConstIter const_iter){
 	
 //
-	ft::vector<int>::iterator	iter;
-	ft::vector<int>::const_iterator	const_iter;
+//	ft::vector<int>::iterator	iter;
+//	ft::vector<int>::const_iterator	const_iter;
 	
 	const_iter=iter;
 	assert(iter == const_iter);
-	std::cout << *iter << std::endl;
-	*iter = 5;
+	//std::cout << *iter << std::endl;
+	//*iter = 5;
 	++iter;
 	iter++;
-	*iter++;
+	//*iter++;
 	--iter;
 	iter--;
-	*iter--;
+	//*iter--;
 	iter + 5;
 	5 + iter;
 	iter - 5;
 	iter - const_iter;
+	iter + const_iter;
+	const_iter + iter;
+	const_iter - iter;
 	assert(iter < const_iter);
 	assert(iter > const_iter);
 	assert(iter <= const_iter);
@@ -214,10 +218,10 @@ void test_iterators(){
 int main()
 {
 	
-	//test_iterators();
+	test_iterators(ft::vector<int>::iterator(), ft::vector<int>::const_iterator());
 	
 	//test_reserve();
-	//test_reverse();
-	test_insert();
+	//test_reverse();}}
+	//test_insert();
 	return (0);
 }
