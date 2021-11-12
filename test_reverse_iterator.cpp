@@ -7,7 +7,7 @@
 #include <vector>       // ft::vector
 #include <map>
 
-void	test_constructor() {
+void	reverse_it_constructor() {
 	ft::vector<int> myvector;
 	for (int i=0; i<10; i++) myvector.push_back(i);
 	typedef ft::vector<int>::iterator iter_type;                                                         // ? 0 1 2 3 4 5 6 7 8 9 ?
@@ -21,7 +21,7 @@ void	test_constructor() {
 	std::cout << '\n';
 }
 
-void	test_base() {
+void	reverse_it_base() {
   ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);
 
@@ -36,7 +36,7 @@ void	test_base() {
   std::cout << '\n';
 }
 
-void	test_operator_star(){
+void	reverse_it_operator_star(){
 	ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);
 
@@ -56,7 +56,7 @@ void	test_operator_star(){
   std::cout << '\n';
 }
 
-void	test_operator_plus(){
+void	reverse_it_operator_plus(){
 	ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
@@ -69,7 +69,7 @@ void	test_operator_plus(){
   std::cout << "The fourth element from the end is: " << *rev_it << '\n';
 }
 
-void test_operator_plus_plus(){
+void reverse_it_operator_plus_plus(){
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);
 
@@ -91,7 +91,7 @@ ft::vector<int> myvector;
   std::cout << '\n';
 }
 
-void test_operator_plus_equals(){
+void reverse_it_operator_plus_equals(){
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
@@ -104,7 +104,7 @@ ft::vector<int> myvector;
   std::cout << "The third element from the end is: " << *rev_iterator << '\n';
 }
 
-void test_operator_minus(){
+void reverse_it_operator_minus(){
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
@@ -117,7 +117,7 @@ ft::vector<int> myvector;
   std::cout << "myvector.rend()-3 points to: " << *rev_iterator << '\n';
 }
 
-void	test_operator_minus_minus(){	
+void	reverse_it_operator_minus_minus(){	
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);
 
@@ -136,7 +136,7 @@ ft::vector<int> myvector;
   std::cout << '\n';
 }
 
-void	test_operator_minus_equals(){	
+void	reverse_it_operator_minus_equals(){	
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
@@ -150,7 +150,7 @@ ft::vector<int> myvector;
 }
 
 
-void test_operator_arrow(){	
+void reverse_it_operator_arrow(){	
 	std::map<int,std::string> numbers;
   numbers.insert (std::make_pair(1,"one"));
   numbers.insert (std::make_pair(2,"two"));
@@ -166,7 +166,7 @@ void test_operator_arrow(){
     std::cout << rev_iterator->first << ' ' << rev_iterator->second << '\n';
 }
 
-void test_operator_brackets(){
+void reverse_it_operator_brackets(){
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);  // myvector: 0 1 2 3 4 5 6 7 8 9
 
@@ -177,7 +177,7 @@ ft::vector<int> myvector;
   std::cout << "The fourth element from the end is: " << rev_iterator[3] << '\n';
 }
 
-void test_relational(){
+void reverse_it_relational(){
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);
 
@@ -197,7 +197,7 @@ ft::vector<int> myvector;
   std::cout << '\n';
 }
 
-void test_operator_plus_nonmember(){
+void reverse_it_operator_plus_nonmember(){
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
@@ -210,7 +210,7 @@ ft::vector<int> myvector;
   std::cout << "The fourth element from the end is: " << *rev_it << '\n';
 }	
 
-void test_operator_minus_nonmember(){
+void reverse_it_operator_minus_nonmember(){
 ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);
 
@@ -222,21 +222,19 @@ ft::vector<int> myvector;
   std::cout << "myvector has " << (until-from) << " elements.\n";
 }
 
-int main()
-{
-	test_constructor();
-	test_base();
-	test_operator_star();
-	test_operator_plus();
-	test_operator_plus_plus();
-	test_operator_plus_equals();
-	test_operator_minus();
-	test_operator_minus_minus();
-	test_operator_minus_equals();
-	test_operator_arrow();
-	test_operator_brackets();
-	test_relational();
-	test_operator_plus_nonmember();
-	test_operator_minus_nonmember();
-	return (0);
+void test_reverse(){
+	reverse_it_constructor();
+	reverse_it_base();
+	reverse_it_operator_star();
+	reverse_it_operator_plus();
+	reverse_it_operator_plus_plus();
+	reverse_it_operator_plus_equals();
+	reverse_it_operator_minus();
+	reverse_it_operator_minus_minus();
+	reverse_it_operator_minus_equals();
+	reverse_it_operator_arrow();
+	reverse_it_operator_brackets();
+	reverse_it_relational();
+	reverse_it_operator_plus_nonmember();
+	reverse_it_operator_minus_nonmember();
 }

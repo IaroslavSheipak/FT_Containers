@@ -17,6 +17,11 @@
 # define GREEN  "\x1b[32;1m" <<
 # define DEFAULT << "\x1b[m"
 
+//struct NoDefaultConstructor{
+//		NoDefaultConstructor & operator=(NoDefaultConstructor & src);
+//		NoDefaultConstructor();
+//		~NoDefaultConstructor(){};
+//};
 
 void time(clock_t end, clock_t start){
 	
@@ -35,45 +40,6 @@ void who_won(std::string name_of_test, clock_t my_dur, clock_t stl_dur) {
 		std::cout << "stl won :-(\n";
 }
 
-void test_push_back() {
-	std::vector<int> v1;
-	ft::vector<int> v2;
-	clock_t start, end;
-
-	start = clock();
-	for (int i = 0; i < 40; i++)
-		v1.push_back(i);
-	end = clock();
-	clock_t stl_duration = end - start;
-
-	start = clock();
-	for (int i = 0; i < 40; i++)
-		v2.push_back(i);
-	end = clock();
-	clock_t my_duration = end - start;
-
-	who_won("PUSH_BACK TEST" , my_duration, stl_duration);
-}
-
-void test_pop_back() {
-	std::vector<int> v1(50, 2);
-	ft::vector<int> v2(50, 2);
-	clock_t start, end;
-
-	start = clock();
-	for (int i = 0; i < 40; i++)
-		v1.pop_back();
-	end = clock();
-	clock_t stl_duration = end - start;
-
-	start = clock();
-	for (int i = 0; i < 40; i++)
-		v2.pop_back();
-	end = clock();
-	clock_t my_duration = end - start;
-
-	who_won("POP_BACK TEST" , my_duration, stl_duration);
-}
 
 void test_reserve() {
 	std::vector<int> v1(50, 2);
@@ -92,6 +58,24 @@ void test_reserve() {
 
 	who_won("RESERVE TEST" , my_duration, stl_duration);
 }
+
+void test_push_back() {
+	ft::vector<int> v1;
+	ft::vector<int> v2;
+
+	for (int i = 0; i < 40; i++)
+		v1.push_back(i);
+
+}
+
+void test_pop_back() {
+	ft::vector<int> v1(50, 2);
+
+	for (int i = 0; i < 40; i++)
+		v1.pop_back();
+
+}
+
 
 template<class A, class B>
 void compare_assert(A stdv1, A stdv2, B v1, B v2, std::string name) {
@@ -225,11 +209,15 @@ void test_iterators(){
 //}
 
 
+
+
 int main()
 {
 	
 	//test_iterators();
+	
 	//test_reserve();
+	//test_reverse();
 	test_insert();
 	return (0);
 }
