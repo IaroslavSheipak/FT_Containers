@@ -185,8 +185,6 @@ void test_iterators(Iter iter, ConstIter const_iter){
 	5 + iter;
 	iter - 5;
 	iter - const_iter;
-	iter + const_iter;
-	const_iter + iter;
 	const_iter - iter;
 	assert(iter < const_iter);
 	assert(iter > const_iter);
@@ -219,6 +217,7 @@ int main()
 {
 	
 	test_iterators(ft::vector<int>::iterator(), ft::vector<int>::const_iterator());
+	test_iterators(std::vector<int>::iterator(), std::vector<int>::const_iterator());
 	
 	//test_reserve();
 	//test_reverse();}}
