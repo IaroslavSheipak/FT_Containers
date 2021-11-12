@@ -112,7 +112,7 @@ template< typename T, bool IsConst>class RandomAccessIterator
 			return(_ptr - b.base());
 		}
 		difference_type operator-(const RandomAccessIterator<T, false> & b){
-			return(_ptr - b._ptr);
+			return(_ptr - b.base());
 		}
 		RandomAccessIterator & operator+=(const difference_type & a){
 			_ptr += a;

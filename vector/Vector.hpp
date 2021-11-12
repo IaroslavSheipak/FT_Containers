@@ -47,7 +47,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		//CONSTRUCTORS
 		
 		//default		
-		explicit vector (const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0), _allocator(alloc){}
+		explicit vector (const allocator_type& alloc = allocator_type()) : _first(0), _size(0), _capacity(0), _allocator(alloc) {}
 
 		//fill
 		explicit vector (size_type n, const value_type& val = value_type(),
@@ -306,7 +306,8 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			else {
 				for (size_type i = _size; i > start; i--){
 					_allocator.destroy(_first + i);
-					_allocator.deallocate(_first, _size);
+					_allocator.construct(_first + i, *(_first + i - 1));
+				//	_allocator.deallocate(_first, _size);
 				}
 				_allocator.destroy(position.base());
 				_allocator.construct(position.base(), val);
