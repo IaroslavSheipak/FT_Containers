@@ -225,7 +225,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 
 		//MODIFIERS
 		template <class InputIterator>
-  			void assign (InputIterator first, InputIterator last){
+  			void assign (InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value>::type* = 0){
 				if(first > last)
 					throw std::logic_error("vector");
 				difference_type count = last - first;
@@ -307,7 +307,6 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 				for (size_type i = _size; i > start; i--){
 					_allocator.destroy(_first + i);
 					_allocator.construct(_first + i, *(_first + i - 1));
-				//	_allocator.deallocate(_first, _size);
 				}
 				_allocator.destroy(position.base());
 				_allocator.construct(position.base(), val);
@@ -319,7 +318,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		void insert (iterator position, size_type n, const value_type& val){
 			if (n == 0)
 				return ;
-			else if (max_size() - _size < n || position < begin())
+			else if (max_size() - _size < n)
 				throw std::length_error("vector");
 			difference_type start = position - begin();
 			if (_size + n > _capacity){
@@ -352,18 +351,28 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 					throw std::logic_error("vector");
 				difference_type start = position - begin();
 				difference_type count = last - first;
-				if (_size + count > _capacity)
-					reserve(_capacity * 2 >= _size + count ? _capacity * 2 : _size + count);
-				position = begin() + start;
-				Ucopy(position, end(), position + count);
-				while (first < last){
-					if (position.base())
-						_allocator.destroy(position.base());
-					_allocator.construct(position.base(), *first);
-					position++;
-					first++;
+				if (_size + count > _capacity){
+					size_type new_cap = _capacity * 2 >= _size + count ? _capacity * 2 : _size + count;
+					pointer new_arr = _allocator.allocate(new_cap);
+					std::uninitialized_copy(position, end(), iterator(new_arr + start + count));
+					for (size_type i = 0; i < _size; i++)
+						_allocator.destroy(_first + i);
+					_allocator.deallocate(_first, _capacity);
+					_size += count;
+					_capacity = new_cap;
+					_first = new_arr;
 				}
-				_size += count;
+				else{
+					for (size_type i = _size; i > start; i--){
+						_allocator.destroy(_first + i + count - 1);
+						_allocator.construct(_first + i + count - 1, *(_first + i - 1));
+					}
+					for (size_type i = 0; i < count; i++, first++){
+						_allocator.destroy(_first + i + count);
+						_allocator.construct(_first + start + i, *first);
+					}
+					_size += count;
+				}
 			}
 
 		//single element
