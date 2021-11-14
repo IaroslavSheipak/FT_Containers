@@ -187,10 +187,10 @@ void test_iterators(Iter iter, ConstIter const_iter){
 	iter - const_iter;
 	const_iter - iter;
 	std::cout << "ITERATORS RELATIONAL OPERATORS" << std::endl;
-	std:: cout << (iter < const_iter);
-	std::cout << (iter > const_iter);
-	std::cout << (iter <= const_iter);
-	std::cout << (iter >= const_iter);
+	std:: cout << (iter < const_iter) << std::endl;
+	std::cout << (iter > const_iter) << std::endl;
+	std::cout << (iter <= const_iter) << std::endl;
+	std::cout << (iter >= const_iter) << std::endl;
 	std::cout << "---------------------------------" << std::endl;
 	
 	iter += 5;
@@ -223,7 +223,7 @@ int main()
 	test_iterators(std::vector<int>::iterator(), std::vector<int>::const_iterator());
 	
 	//test_reserve();
-	//test_reverse();}}
-	//test_insert();
+	//test_reverse();
+	test_insert();
 	return (0);
 }
