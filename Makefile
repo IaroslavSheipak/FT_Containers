@@ -5,8 +5,10 @@ else
 endif
 .PHONY:	ft std all cc
 
+scary_flags = -Wall -Werror -Wextra
+
 comp:  
-	clang++ -g   -D $(TEST_FLAG) main.cpp
+	clang++  -g   -D $(TEST_FLAG) main.cpp
 
 all: 
 	comp
