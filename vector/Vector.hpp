@@ -73,8 +73,11 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 
 		//OPERATOR=
 		vector& operator= (const vector& x){
-			if (_capacity != 0)
+			if (_capacity != 0){
+				for (size_type i = 0; i < _size; i++)
+					_allocator.destroy(_first + i);
 				_allocator.deallocate(_first, _capacity);
+			}
 			_capacity = x._capacity;
 			_size = x._size;
 			_allocator = x._allocator;
@@ -85,7 +88,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 
 		//copy
-		vector (const vector& x){
+		vector (const vector& x) : _capacity(0){
 			*this = x;
 		}
 		
@@ -270,23 +273,6 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 
 		//single element
-		/*iterator insert (iterator position, const value_type& val){
-			if (position < begin() || position > end())
-				throw std::logic_error("vector");
-			difference_type start = position - begin();
-			if (_size + 1 > _capacity)
-				reserve(_capacity * 2 + (_capacity == 0));
-			position = begin() + start;
-			//Ucopy(position, end(), position + 1);
-			std::uninitialized_copy(position, end(), position + 1);
-			if (position.base())
-				_allocator.destroy(position.base());
-			_allocator.construct(position.base(), val);
-			_size++;
-			return (position);
-		}*/
-		
-		//single element
 		iterator insert (iterator position, const value_type& val){
 			if (position < begin() || position > end())
 				throw std::logic_error("vector");
@@ -314,6 +300,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 				}
 				return (begin() + start);
 			}
+
 		//fill
 		void insert (iterator position, size_type n, const value_type& val){
 			if (n == 0)
@@ -337,8 +324,12 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 			}
 			else {
 				for (size_type i = _size; i > start; i--) {
-					_allocator.destroy(_first + i + n);
-					_allocator.construct(_first + start + i, val);
+					_allocator.destroy(_first + i + n - 1);
+					_allocator.construct(_first + i + n - 1, *(_first + i - 1));
+				}
+				for (size_type i = 0; i < n; i++){
+					_allocator.destroy(_first + i + start);
+					_allocator.construct(_first + i + start, val);
 				}
 				_size += n;
 			}
@@ -347,34 +338,68 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		//range
 		template <class InputIterator>
     		void insert (iterator position, InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value>::type* = 0){
-				if (position < begin() || position > end() || first > last)
-					throw std::logic_error("vector");
-				difference_type start = position - begin();
-				difference_type count = last - first;
-				if (_size + count > _capacity){
-					size_type new_cap = _capacity * 2 >= _size + count ? _capacity * 2 : _size + count;
-					pointer new_arr = _allocator.allocate(new_cap);
-					std::uninitialized_copy(position, end(), iterator(new_arr + start + count));
-					for (size_type i = 0; i < _size; i++)
-						_allocator.destroy(_first + i);
-					_allocator.deallocate(_first, _capacity);
-					_size += count;
-					_capacity = new_cap;
-					_first = new_arr;
-				}
-				else{
-					for (size_type i = _size; i > start; i--){
-						_allocator.destroy(_first + i + count - 1);
-						_allocator.construct(_first + i + count - 1, *(_first + i - 1));
-					}
-					for (size_type i = 0; i < count; i++, first++){
-						_allocator.destroy(_first + i + count);
-						_allocator.construct(_first + start + i, *first);
-					}
-					_size += count;
-				}
-			}
 
+				if (position < begin() || position > end() || first > last)
+				throw std::logic_error("vector");
+			difference_type start = position - begin();
+			difference_type count = last - first;
+			if (_size + count > _capacity) {
+				size_type new_cap = _capacity * 2 >= _size + count ? _capacity * 2 : _size + count;
+				pointer new_arr = _allocator.allocate(new_cap);
+				std::uninitialized_copy(begin(), position, iterator(new_arr));
+				for (size_type i = 0; i < count; i++, first++)
+					_allocator.construct(new_arr + start + i, *first);
+				std::uninitialized_copy(position, end(), iterator(new_arr + start + count));
+				for (size_type i = 0; i < _size; i++)
+					_allocator.destroy(_first + i);
+				_allocator.deallocate(_first, _capacity);
+				_size += count;
+				_capacity = new_cap;
+				_first = new_arr;
+			}
+			else {
+				for (size_type i = _size; i > start; i--) {
+					_allocator.destroy(_first + i + count - 1);
+					_allocator.construct(_first + i + count - 1, *(_first + i - 1));
+				}
+				for (size_type i = 0; i < count; i++, first++) {
+					_allocator.destroy(_first + i + count);
+					_allocator.construct(_first + start + i, *first);
+				}
+				_size += count;
+			}
+		}
+//				if (position < begin() || position > end() || first > last)
+//					throw std::logic_error("vector");
+//				difference_type start = position - begin();
+//				difference_type count = last - first;
+//				if (_size + count > _capacity){
+//					size_type new_cap = _capacity * 2 >= _size + count ? _capacity * 2 : _size + count;
+//					pointer new_arr = _allocator.allocate(new_cap);
+//					std::uninitialized_copy(begin(), position, iterator(new_arr));
+//					for (size_type i = 0; i < count; i++, first++)
+//						_allocator.construct(new_arr + start + i, *first);
+//					std::uninitialized_copy(position, end(), iterator(new_arr + start + count));
+//					for (size_type i = 0; i < _size; i++)
+//						_allocator.destroy(_first + i);
+//					_allocator.deallocate(_first, _capacity);
+//					_size += count;
+//					_capacity = new_cap;
+//					_first = new_arr;
+//				}
+//				else{
+//					for (size_type i = _size; i > start; i--){
+//						_allocator.destroy(_first + i + count - 1);
+//						_allocator.construct(_first + i + count - 1, *(_first + i - 1));
+//					}
+//					for (size_type i = 0; i < count; i++, first++){
+//						_allocator.destroy(_first + i + count);
+//						_allocator.construct(_first + start + i, *first);
+//					}
+//					_size += count;
+//				}
+//			}
+//
 		//single element
 		iterator erase (iterator position){
 			difference_type d = std::distance(begin(), position);
@@ -408,9 +433,7 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		}
 		
 		void swap (vector& x){
-			pointer tmp = _first;
-			_first = x._first;
-			x._first = tmp;
+			std::swap(x, *this);
 		}
 
 		void clear(){
