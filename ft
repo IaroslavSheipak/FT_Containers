@@ -1,0 +1,107 @@
+VECTOR TESTS:
+\\\\\\\\\
+
+ITERATORS RELATIONAL OPERATORS
+0
+0
+1
+1
+---------------------------------
+
+
+Constructors test:
+1) first(): size = 0, capacity = 0
+2) second(4, 100): size = 4, capacity = 4
+3) third(second.begin(),second.end()): size = 4, capacity = 4
+4) fourth (third): size = 4, capacity = 4
+int myints[] = {16,2,77,29}
+fifth (myints, myints + sizeof(myints) / sizeof(int) )
+5) The contents of fifth are: 16 2 77 29
+
+Destructor test:
+No error and no leaks -> destructor is ok
+
+Begin - End test:
+for (int i=1; i<=5; i++) myvector.push_back(i);
+myvector contains: 1 2 3 4 5
+
+Rbegin - Rend test:
+myvector contains: 5 4 3 2 1
+
+Size() test:
+0. size: 0
+1. size: 10
+2. size: 20
+3. size: 19
+
+Size, max_size and capacity after inserting 100 elems using push_back():
+size: 100
+capacity: 128
+max_size: 4611686018427387903
+
+Empty test:
+total: 55
+
+Reserve test:
+making foo grow:
+capacity changed: 1
+capacity changed: 2
+capacity changed: 4
+capacity changed: 8
+capacity changed: 16
+capacity changed: 32
+capacity changed: 64
+capacity changed: 128
+making bar grow:
+capacity changed: 100
+
+operator brackets test:
+myvector contains: 9 8 7 6 5 4 3 2 1 0
+
+At test:
+myvector contains: 0 1 2 3 4 5 6 7 8 9
+
+Front() test:
+myvector.front() is now 62
+
+Back() test:
+myvector contains: 10 9 8 7 6 5 4 3 2 1 0
+
+Assign test:
+Size of first: 7
+Size of second: 5
+Size of third: 3
+
+Push_back test:
+myvector stores 1000 numbers.
+
+Pop_back test:
+The elements of myvector add up to 600
+
+Insert test:
+myvector contains: 501 502 503 300 300 400 400 200 100 100 100
+
+Erase test:
+myvector contains: 4 5 7 8 9 10
+
+Swap test:
+foo contains: 200 200 200 200 200
+bar contains: 100 100 100
+
+Clear test:
+myvector contains: 100 200 300
+myvector contains: 1101 2202
+
+Get_allocator() test:
+The allocated array contains: 0 1 2 3 4
+
+Relational operators test:
+foo and bar are not equal
+foo is less than bar
+foo is less than or equal to bar
+
+Swap test:
+foo contains: 200 200 200 200 200
+bar contains: 100 100 100
+
+/////////

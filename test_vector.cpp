@@ -1,11 +1,12 @@
-
 #ifdef yarik
 #include "../ft_containers/vector/Vector.hpp"
 #include "../ft_containers/iterator/iterator.hpp"
+#include "../ft_containers/map/RBTree.hpp"
 #endif
 #ifdef kirill
 #include "../ft_containers/stack/stack.hpp"
 #endif
+#include "SampleClass.hpp"
 #include <time.h>
 #include <vector>
 #include <iostream>
@@ -17,56 +18,6 @@
 # define RED    "\x1b[31;1m" <<
 # define GREEN  "\x1b[32;1m" <<
 # define DEFAULT << "\x1b[m"
-
-//struct NoDefaultConstructor{
-//		NoDefaultConstructor & operator=(NoDefaultConstructor & src);
-//		NoDefaultConstructor();
-//		~NoDefaultConstructor(){};
-//};
-
-class SampleClass{
-	public:
-		SampleClass(){
-			_nums = new int[4];
-		}
-		SampleClass(SampleClass const & src){
-			_nums = new int[4];
-			for (int i = 0; i < 4; i++){
-				_nums[i] = src._nums[i];
-			}
-		}
-		SampleClass & operator=(SampleClass & src){
-			delete [] _nums;
-			_nums = new int[4];
-			for (int i = 0; i < 4; i++){
-				_nums[i] = src._nums[i];
-			}
-			return (*this);
-		}
-		~SampleClass(){
-			delete [] _nums;
-		}
-
-	private:
-		int *_nums;
-};
-
-void time(clock_t end, clock_t start){
-	
-	std::cout << GREEN end - start << std::endl DEFAULT;
-}
-
-void who_won(std::string name_of_vector, clock_t my_dur, clock_t stl_dur) {
-	std::cout << name_of_vector << "!!!!!!!!!!!" << std::endl;
-	std::cout << std::fixed << "stl vector: " << stl_dur << std::endl;
-	std::cout << std::fixed << "your vector: " << my_dur << std::endl;
-	double res = my_dur / stl_dur;
-	std::cout << std::fixed << "your_res = " << res << " stl_res, ";
-	if (res <= 1)
-		std::cout << "you won :-)\n";
-	else
-		std::cout << "stl won :-(\n";
-}
 
 void	vector_constructor_output_res(ft::vector<int> &vec, std::string name) {
 	std::cout << name << ": size = " << vec.size() << ", capacity = " << vec.capacity() << std::endl;
@@ -359,23 +310,23 @@ void vector_pop_back(){
 
 }
 
-void vector_insert(){
+void vector_insert() {
 	std::cout << "Insert test:\n";
 	ft::vector<int> myvector (3,100);
 	ft::vector<int>::iterator it;
 
 	it = myvector.begin();
-	it = myvector.insert ( it , 200 );
+	it = myvector.insert (it, 200 );
 
-	myvector.insert (it,2,300);
+	myvector.insert (it, 2, 300);
 
 	// "it" no longer valid, get a new one:
 	it = myvector.begin();
 
-	ft::vector<int> anothervector (2,400);
+	ft::vector<int> anothervector (2, 400);
 	myvector.insert (it+2,anothervector.begin(),anothervector.end());
 
-	int myarray [] = { 501,502,503 };
+	int myarray [] = { 501, 502, 503 };
 	myvector.insert (myvector.begin(), myarray, myarray+3);
 
 	std::cout << "myvector contains:";
@@ -698,15 +649,3 @@ void test_vector() {
 	std::cout << "/////////\n";
 }
 
-
-int main()
-{
-	
-	//vector_iterators(ft::vector<int>::iterator(), ft::vector<int>::const_iterator());
-
-	test_vector();	
-	//vector_reserve();
-	//vector_reverse();
-	//vector_insert();
-	return (0);
-}
