@@ -1,25 +1,4 @@
-#ifdef yarik
-#include "../ft_containers/vector/Vector.hpp"
-#include "../ft_containers/iterator/iterator.hpp"
-#include "../ft_containers/map/RBTree.hpp"
-#endif
-#ifdef kirill
-#include "../ft_containers/stack/stack.hpp"
-#endif
-#include "SampleClass.hpp"
-#include <time.h>
-#include <vector>
-#include <iostream>
-#include <algorithm>
-#include <cassert>
-#include <map>
-# define B_CYAN "\x1b[46;1m" <<
-# define B_RED  "\x1b[41;1m" <<
-# define YELLOW "\x1b[33;1m" <<
-# define RED    "\x1b[31;1m" <<
-# define GREEN  "\x1b[32;1m" <<
-# define DEFAULT << "\x1b[m"
-
+#include "test_header.hpp"
 
 bool fncomp (char lhs, char rhs) {return lhs<rhs;}
 

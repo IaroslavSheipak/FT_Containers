@@ -1,27 +1,4 @@
-
-#ifdef yarik
-#include "../ft_containers/vector/Vector.hpp"
-#include "../ft_containers/iterator/iterator.hpp"
-#include "../ft_containers/map/RBTree.hpp"
-#endif
-#ifdef kirill
-#include "../ft_containers/stack/stack.hpp"
-#endif
-#include "test_map.hpp"
-#include "test_vector.hpp"
-#include "SampleClass.hpp"
-#include <time.h>
-#include <vector>
-#include <iostream>
-#include <algorithm>
-#include <cassert>
-# define B_CYAN "\x1b[46;1m" <<
-# define B_RED  "\x1b[41;1m" <<
-# define YELLOW "\x1b[33;1m" <<
-# define RED    "\x1b[31;1m" <<
-# define GREEN  "\x1b[32;1m" <<
-# define DEFAULT << "\x1b[m"
-
+#include "test_header.hpp"
 
 void time(clock_t end, clock_t start){
 	
@@ -70,33 +47,34 @@ void test_vector() {
 }
 
 
-void test_map() {
-	
-	std::cout << "MAP TESTS:\n";
-	std::cout << "\\\\\\\\\\\\\\\\\\\n\n";
-	map_constructor();
-	map_destructor();
-	map_operator_equals();
-	map_begin_end();
-	map_rbegin_rend();
-	map_empty();
-	map_size();
-	map_max_size();
-	map_operator_brackets();
-	map_insert();
-	map_erase();
-	map_swap();
-	map_clear();
-	std::cout << "/////////\n";
-}
+//void test_map() {
+//	
+//	std::cout << "MAP TESTS:\n";
+//	std::cout << "\\\\\\\\\\\\\\\\\\\n\n";
+//	map_constructor();
+//	map_destructor();
+//	map_operator_equals();
+//	map_begin_end();
+//	map_rbegin_rend();
+//	map_empty();
+//	map_size();
+//	map_max_size();
+//	map_operator_brackets();
+//	map_insert();
+//	map_erase();
+//	map_swap();
+//	map_clear();
+//	std::cout << "/////////\n";
+//}
 
 
 int main()
 {
-	//std::cout << a[0];
-	//iter = const_iter;
 	
-	test_map();
-	test_vector();	
+	RBTree<int> tree;
+
+
+	//test_map();
+	//test_vector();	
 	return (0);
 }
