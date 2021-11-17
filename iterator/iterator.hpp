@@ -5,14 +5,6 @@
 
 namespace ft{
 
-		/*template<bool B, class T, class F>
-struct conditional {
-	typedef F type;
-};
- 
-template<class T, class F>
-struct conditional<true, T, F> { typedef T type; };
-*/
 template< typename T, bool IsConst>class RandomAccessIterator
 {
 	public:

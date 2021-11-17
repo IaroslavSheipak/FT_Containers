@@ -185,6 +185,18 @@ class RBTree{
 			_header->is_black = true;
 		}
 
+		//void _visualize(int tabs , node_pointer root, bool new_str){
+		//	if (root == _nil)
+		//		return;
+		//	std::string color = root->is_black == true ? "\x1b[m" : "\x1b[31;1m" ;
+		//	for(int i = 0; i < tabs; i++)
+		//		std::cout << '\t';
+		//	std::cout << color << *root->value << "\x1b[31;1m" << std::endl;
+		//	_visualize(tabs-1, root->left, false);
+		//	_visualize(2, root->right, true);
+		//	
+		//
+		//}	
 
 		//PUBLIC FUNCTIONS
 	public:
@@ -217,6 +229,115 @@ class RBTree{
 			_header->parent = new_node;
 			//return res;
 		} 
+
+		void erase(value_type *pos){
+			node_pointer y = pos, x, for_free = y;
+			bool y_original_is_black = y->is_black;
+			if (is_nil(y->left)){
+				x = y->right;
+				transplant(y, y->right);
+			}
+			else if (is_nil(y->right)){
+				x = y->left;
+				transplant(y, y->left);
+			}
+			else {
+				node_pointer z = y;
+				y = tree_min(z->right);
+				y_original_is_black = y->is_black;
+				x = y->right;
+				if (y->parent != z){
+					transplant(y, y->right);
+					y->right = z->right;
+					z->right->parent = y;
+				}
+				transplant(z, y);
+				y->left = z->left;
+				y->left->parent = y;
+				y->is_black = z->is_black;
+			}
+			free_node(for_free);
+			if (y_original_is_black)
+				erase_fixup(x);
+			_size--;
+			_nil->parent = NULL;
+			if (_size == 0)
+				_root = _header;
+			else{
+				if (_size != 1)
+					x = tree_max(_root);
+				else
+					x = _root;
+				x->right = _header;
+				_header->parent = x;
+			}
+		}
+
+		void erase_fixup(node_pointer x){
+			node_pointer brother;
+			while (x != _root && x->is_black){
+				if (x == x->parent->left){
+					brother = x->parent->right;
+					//case 1
+					if (!brother->is_black){
+						brother->is_black = true;
+						x->parent->is_black = false;
+						_rotate_left(x->parent);
+						brother = x->parent->right;
+					}
+					//case 2
+					if (brother->left->is_black && brother->is_right->is_black){
+						brother->is_black = false;
+						x = x->parent;
+					}
+					else{
+					//case 3
+						if (brother->right->is_black){
+							brother->left->is_black = true;
+							brother->is_black = false;
+							_rotate_right(brother);
+							brother = x->parent->right;
+						}
+					//case 4
+						brother->is_black = x->parent->is_black;
+						x->parent->is_black = true;
+						brother->right->is_black = true;
+						_rotate_left(x->parent);
+						x = _root;
+					}
+				}
+				else{
+					brother = x->parent->left;
+					//case 1
+					if (!brother->is_black){
+						brother->is_black = true;
+						x->parent->is_black = false;
+						_rotate_right(x->parent);
+						brother = x->parent->left;
+					}
+					//case 2
+					if (brother->right->is_black && brother->left->is_black){
+						brother->is_black = false;
+						x = x->parent;
+					}
+					else{
+					//case 3
+						if (brother->left->is_black){
+							brother->right->is_black = true;
+							brother->is_black = false;
+							_rotate_left(brother);
+							brother = x->parent->left;
+						}
+					//case 4
+						brother->is_black = x->parent->is_black;
+						x->parent->is_black = true;
+						brother->left->is_black = true;
+						_rotate_right(x->parent);
+						x = _root;
+					}
+				}
+			}
+		}
 		//CONSTRUCTORS
 		RBTree(const Compare &comp, const allocator_type& a = allocator_type()):
 				_root(0), _val_alloc(a), _node_alloc(node_allocator()), _compare(comp), _size(0){
@@ -232,7 +353,7 @@ class RBTree{
 		RBTree(const RBTree& src){
 			*this = src;
 		}
-		
+	
 		RBTree& operator=(const RBTree & src){
 			this->_node_alloc = src._node_alloc;
 			this->_val_alloc = src._val_alloc;
