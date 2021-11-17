@@ -11,7 +11,7 @@ class SampleClass{
 				_nums[i] = src._nums[i];
 			}
 		}
-		SampleClass & operator=(SampleClass & src){
+		SampleClass & operator=(SampleClass const & src){
 			delete [] _nums;
 			_nums = new int[4];
 			for (int i = 0; i < 4; i++){
