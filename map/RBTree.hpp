@@ -25,6 +25,133 @@ struct Node{
 
 template<class Value, class Compare = std::less<Value>, class Alloc = std::allocator<Value> >
 class RBTree{
+	private:
+template<typename T>
+	class TreeIter {
+	public:
+		typedef ptrdiff_t difference_type;
+		typedef std::bidirectional_iterator_tag iterator_category;
+		typedef T								value_type;
+		typedef T&								reference;
+		typedef T*								pointer;
+
+		template <class _Cont, class _Comp, class _Alloc> friend class  RBTree;
+
+		typedef Node<T>* node_pointer;
+
+	private:
+		node_pointer _node;
+
+		TreeIter(void *node): _node(static_cast<node_pointer>(node)) {}
+
+		node_pointer tree_min(node_pointer n) {
+			while (n->left != NULL && !n->left->is_nil)
+				n = n->left;
+			return n;
+		}
+
+		node_pointer tree_max(node_pointer n) {
+			while (!n->right->is_nil)
+				n = n->right;
+			return n;
+		}
+
+		node_pointer node() {
+			return _node;
+		}
+
+	public:
+		TreeIter() {}
+
+		TreeIter(const TreeIter<value_type> & other) {
+			this->_node = other._node;
+		}
+
+		TreeIter& operator=(const TreeIter<value_type>& other) {
+			this->_node = other._node;
+			return *this;
+		}
+
+		reference operator*() const {
+			return *(_node->content);
+		}
+
+		pointer operator->() const {
+			return _node->content;
+		}
+
+		TreeIter& operator++() {
+			if (!_node->right->is_nil) {
+				_node = tree_min(_node->right);
+			}
+			else {
+				node_pointer y = _node->father;
+				while (y != NULL && _node == y->right) {
+					_node = y;
+					y = y->father;
+				}
+				_node = y;
+			}
+			return *this;
+		}
+
+		TreeIter operator++(int) {
+			TreeIter<value_type> temp = *this;
+			if (!_node->right->is_nil) {
+				_node = tree_min(_node->right);
+			}
+			else {
+				node_pointer y = _node->father;
+				while (y != NULL && _node == y->right) {
+					_node = y;
+					y = y->father;
+				}
+				_node = y;
+			}
+			return temp;
+		}
+
+		TreeIter& operator--() {
+			if (!_node->left->is_nil) {
+				_node = tree_max(_node->left);
+			}
+			else {
+				node_pointer y = _node->father;
+				while (y != NULL && _node == y->left) {
+					_node = y;
+					y = y->father;
+				}
+				_node = y;
+			}
+			return *this;
+		}
+
+		TreeIter operator--(int) {
+			TreeIter<value_type> temp = *this;
+			if (!_node->left->is_nil) {
+				_node = tree_max(_node->left);
+			}
+			else {
+				node_pointer y = _node->father;
+				while (y != NULL && _node == y->left) {
+					_node = y;
+					y = y->father;
+				}
+				_node = y;
+			}
+			return temp;
+		}
+
+		bool operator==(const TreeIter<value_type> &other) const {
+			return this->_node == other._node;
+		}
+
+		bool operator!=(const TreeIter<value_type> &other) const {
+			return this->_node != other._node;
+		}
+	};
+
+
 	public:
 		typedef Value value_type;
 		typedef Compare key_compare;
@@ -184,6 +311,21 @@ class RBTree{
 			_val_alloc.construct(_header->value, Value());
 			_header->is_black = true;
 		}
+		void transplant(node_pointer where, node_pointer what) {
+			if (where == _root)
+				_root = what;
+			else if (where == where->parent->left)
+				where->parent->left = what;
+			else
+				where->parent->right = what;
+			what->parent = where->parent;
+		}
+		
+		void 	free_node(node_pointer node){
+			_val_alloc.destroy(node->value);
+			_val_alloc.deallocate(node->value, 1);
+			_node_alloc.deallocate(node, 1);
+		}
 
 		//void _visualize(int tabs , node_pointer root, bool new_str){
 		//	if (root == _nil)
@@ -231,7 +373,7 @@ class RBTree{
 		} 
 
 		void erase(value_type *pos){
-			node_pointer y = pos, x, for_free = y;
+			node_pointer y = Node(pos), x, for_free = y;
 			bool y_original_is_black = y->is_black;
 			if (is_nil(y->left)){
 				x = y->right;
@@ -286,7 +428,7 @@ class RBTree{
 						brother = x->parent->right;
 					}
 					//case 2
-					if (brother->left->is_black && brother->is_right->is_black){
+					if (brother->left->is_black && brother->right->is_black){
 						brother->is_black = false;
 						x = x->parent;
 					}

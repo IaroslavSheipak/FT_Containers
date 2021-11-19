@@ -12,6 +12,148 @@ namespace ft{
 
 template < class T, class Allocator = std::allocator<T> > class vector{
 
+template< typename L>class RandomAccessIterator
+	{
+	public:
+		typedef	typename iterator_traits<L*>::value_type 	value_type;
+		typedef	typename iterator_traits<L*>::pointer	pointer;
+		typedef	typename iterator_traits<L*>::reference	reference;
+		typedef	typename iterator_traits<L*>::difference_type	difference_type;
+		//this is for std::functions
+		typedef	std::random_access_iterator_tag iterator_category;
+
+		//maybe protected???
+	private:
+		pointer _ptr;
+
+	public:
+
+		// CONSTRUCTORS
+		RandomAccessIterator() : _ptr() {}
+
+		RandomAccessIterator(pointer a) : _ptr(a) {}
+
+		virtual ~RandomAccessIterator() {}
+
+		RandomAccessIterator(const RandomAccessIterator<typename remove_const<value_type>::type > & src) : _ptr(&(*src)) {}
+
+//		pointer base(void) const{
+//			return _ptr;
+//		}
+
+		RandomAccessIterator<value_type> & operator=(RandomAccessIterator<typename remove_const<value_type>::type > const & src) {
+			_ptr = &(*src);
+			return *this;
+		}
+
+		//OPERATORS
+		RandomAccessIterator & operator++() {
+			++_ptr;
+			return *this;
+		}
+
+		RandomAccessIterator operator++(int) {
+			RandomAccessIterator tmp(*this);
+			++_ptr;
+			return tmp;
+		}
+
+		RandomAccessIterator & operator--() {
+			--_ptr;
+			return *this;
+		}
+
+		RandomAccessIterator  operator--(int) {
+			RandomAccessIterator tmp = *this;
+			--_ptr;
+			return tmp;
+		}
+		RandomAccessIterator operator+(const difference_type & a) const {
+			return _ptr + a;
+		}
+
+		RandomAccessIterator operator-(const difference_type & a) const {
+			return _ptr - a;
+		}
+
+		RandomAccessIterator & operator+=(const difference_type & a) {
+			_ptr += a;
+			return (*this);
+		}
+
+		RandomAccessIterator & operator-=(const difference_type & a) {
+			_ptr -= a;
+			return (*this);
+		}
+
+		pointer operator->() const {
+			return _ptr;
+		}
+
+		reference operator*() const {
+			return *_ptr;
+		}
+
+		reference operator[](difference_type n) const {
+			return *(_ptr + n);
+		}
+	};
+
+	public:
+	template<typename A, typename B>
+		friend bool operator==(const vector::template RandomAccessIterator<A> & lhs, const vector::template RandomAccessIterator<B> & rhs){
+			return &(*lhs) == &(*rhs);
+
+
+		}
+
+		template<typename A, typename B>
+		friend bool operator!=(const vector::template RandomAccessIterator<A> & lhs, const vector::template RandomAccessIterator<B> & rhs) {
+			return &(*lhs) != &(*rhs);
+		}
+
+		template<typename A, typename B>
+		friend bool operator>(const vector::template RandomAccessIterator<A> & lhs, const vector::template RandomAccessIterator<B> & rhs) {
+			return &(*lhs) > &(*rhs);
+		}
+
+		template<typename A, typename B>
+		friend bool operator<(const vector::template RandomAccessIterator<A> & lhs, const vector::template RandomAccessIterator<B> & rhs) {
+			return &(*lhs) < &(*rhs);
+		}
+
+		template<typename A, typename B>
+		friend bool operator<=(const vector::template RandomAccessIterator<A> & lhs, const vector::template RandomAccessIterator<B> & rhs) {
+			return &(*lhs) <= &(*rhs);
+		}
+
+
+		template<typename A, typename B>
+		friend bool operator>=(const vector::template RandomAccessIterator<A> & lhs, const vector::template RandomAccessIterator<B> & rhs) {
+			return &(*lhs) >= &(*rhs);
+		}
+
+		template<typename A, typename B>
+		friend typename vector::template RandomAccessIterator<A>::difference_type operator-(const vector::template RandomAccessIterator<A> & lhs, const vector::template RandomAccessIterator<B> & rhs){
+			return &(*lhs) - &(*rhs);
+		}
+
+		template<typename A, typename B>
+		friend typename vector::template RandomAccessIterator<A>::difference_type operator+(const vector::template RandomAccessIterator<A> & lhs, const vector::template RandomAccessIterator<B> & rhs){
+			return &(*lhs) + &(*rhs);
+		}
+
+		template<typename L>
+		friend vector::template RandomAccessIterator<L> operator +(const typename vector::template RandomAccessIterator<L>::difference_type & a, const vector::template RandomAccessIterator<L> & iter){
+			return	(iter + a);
+		}
+
+		template<typename L>
+		friend vector::template RandomAccessIterator<L> operator -(const typename vector::template RandomAccessIterator<L>::difference_type & a, const vector::template RandomAccessIterator<L> & iter){
+			return	(iter - a);
+		}
+	
+
 	public:
 		typedef T value_type;
 		typedef Allocator allocator_type;
@@ -21,29 +163,16 @@ template < class T, class Allocator = std::allocator<T> > class vector{
 		typedef const value_type& const_reference;
 		typedef typename Allocator::pointer pointer;
 		typedef typename Allocator::const_pointer const_pointer;
-		typedef ft::RandomAccessIterator<T, false> iterator;
-		typedef ft::RandomAccessIterator<T, true> const_iterator;
-		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
-		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef RandomAccessIterator<value_type> iterator;
+		typedef RandomAccessIterator<const value_type> const_iterator;
+		typedef ft::reverse_iterator<iterator> reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	private:
 		pointer		_first;
 		size_type 	_size, _capacity;
 		allocator_type	_allocator;
 		
-		template<class InputIt>
-		void Ucopy(InputIt first, InputIt last, InputIt dist){
-			dist += last - first - 1;
-			last--;
-			while (last >= first)
-			{
-				_allocator.destroy(dist.base());
-				_allocator.construct(dist.base(), *last);
-				last--;
-				dist--;
-			}
-		}
 
-	public:
 		//CONSTRUCTORS
 		
 		//default		
