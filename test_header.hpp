@@ -1,8 +1,9 @@
 #pragma once
 #ifdef yarik
 #include "../ft_containers/vector/Vector.hpp"
-#include "../ft_containers/iterator/iterator.hpp"
+//#include "../ft_containers/iterator/iterator.hpp"
 #include "../ft_containers/map/RBTree.hpp"
+#include "../ft_containers/map/Map.hpp"
 #endif
 #ifdef kirill
 #include "../ft_containers/stack/stack.hpp"
