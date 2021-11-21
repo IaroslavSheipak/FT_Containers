@@ -3,7 +3,6 @@
 #include <memory>
 //#include <iterator>
 #include "../utility/utility.hpp"
-#include "../iterator/iterator.hpp"
 #include "../iterator/reverse_iterator.hpp"
 
 namespace ft{
@@ -36,10 +35,6 @@ template< typename L>class RandomAccessIterator
 		virtual ~RandomAccessIterator() {}
 
 		RandomAccessIterator(const RandomAccessIterator<typename remove_const<value_type>::type > & src) : _ptr(&(*src)) {}
-
-//		pointer base(void) const{
-//			return _ptr;
-//		}
 
 		RandomAccessIterator<value_type> & operator=(RandomAccessIterator<typename remove_const<value_type>::type > const & src) {
 			_ptr = &(*src);
@@ -165,13 +160,13 @@ template< typename L>class RandomAccessIterator
 		typedef typename Allocator::const_pointer const_pointer;
 		typedef RandomAccessIterator<value_type> iterator;
 		typedef RandomAccessIterator<const value_type> const_iterator;
-		typedef ft::reverse_iterator<iterator> reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef reverse_iterator<iterator> reverse_iterator;
 	private:
 		pointer		_first;
 		size_type 	_size, _capacity;
 		allocator_type	_allocator;
-		
+	public:	
 
 		//CONSTRUCTORS
 		
@@ -370,7 +365,7 @@ template< typename L>class RandomAccessIterator
 				iterator pos = begin();
 				while (first < last)
 				{
-					_allocator.construct(pos.base(), *first);
+					_allocator.construct(&(*pos), *first);
 					pos++;
 					first++;
 				}
@@ -423,8 +418,8 @@ template< typename L>class RandomAccessIterator
 					_allocator.destroy(_first + i);
 					_allocator.construct(_first + i, *(_first + i - 1));
 				}
-				_allocator.destroy(position.base());
-				_allocator.construct(position.base(), val);
+				_allocator.destroy(&(*position));
+				_allocator.construct(&(*position), val);
 				_size++;
 				}
 				return (begin() + start);
@@ -544,7 +539,7 @@ template< typename L>class RandomAccessIterator
 			difference_type need_to_copy = std::distance(last, end());
 			bool last_is_end = (last == end());
 			while (first != last){
-				_allocator.destroy(first.base());
+				_allocator.destroy(&(*first));
 				first++;
 			}
 			size_type i = start;

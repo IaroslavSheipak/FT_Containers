@@ -32,8 +32,8 @@ template<class T, class Container = std::vector<T> >
 		container.pop_back();
 	}
 
-	private:
-	container_type container;
+	protected:
+		container_type container;
 
 	template <class T, class Container>
 		  friend bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs){

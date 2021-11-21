@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include "../iterator/reverse_iterator.hpp"
 
 template<class Value>
 struct Node{
@@ -26,58 +27,52 @@ struct Node{
 template<class Value, class Compare = std::less<Value>, class Alloc = std::allocator<Value> >
 class RBTree{
 	private:
-template<typename T>
+	template<typename T>
 	class TreeIter {
 	public:
-		typedef ptrdiff_t difference_type;
 		typedef std::bidirectional_iterator_tag iterator_category;
-		typedef T								value_type;
-		typedef T&								reference;
-		typedef T*								pointer;
+		typedef typename ft::iterator_traits<T*>::value_type 		value_type;
+		typedef typename ft::iterator_traits<T*>::reference 		reference;
+		typedef typename ft::iterator_traits<T*>::pointer			pointer;
+		typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
 
-		template <class _Cont, class _Comp, class _Alloc> friend class  RBTree;
+//		template <class _Cont, class _Comp, class _Alloc> friend class  RBTree;
 
 		typedef Node<T>* node_pointer;
 
 	private:
 		node_pointer _node;
 
-		TreeIter(void *node): _node(static_cast<node_pointer>(node)) {}
-
-		node_pointer tree_min(node_pointer n) {
+		node_pointer tree_min(node_pointer n) const {
 			while (n->left != NULL && !n->left->is_nil)
 				n = n->left;
 			return n;
 		}
 
-		node_pointer tree_max(node_pointer n) {
+		node_pointer tree_max(node_pointer n) const {
 			while (!n->right->is_nil)
 				n = n->right;
 			return n;
 		}
 
-		node_pointer node() {
-			return _node;
-		}
-
 	public:
 		TreeIter() {}
 
-		TreeIter(const TreeIter<value_type> & other) {
-			this->_node = other._node;
-		}
+		TreeIter(void *node): _node(static_cast<node_pointer>(node)) {}
 
-		TreeIter& operator=(const TreeIter<value_type>& other) {
+		TreeIter(const TreeIter<typename ft::remove_const<value_type>::type > & other): _node(other.node()) {}
+
+		TreeIter& operator=(const TreeIter<typename ft::remove_const<value_type>::type>& other) {
 			this->_node = other._node;
 			return *this;
 		}
 
 		reference operator*() const {
-			return *(_node->content);
+			return *(_node->value);
 		}
 
 		pointer operator->() const {
-			return _node->content;
+			return _node->value;
 		}
 
 		TreeIter& operator++() {
@@ -85,10 +80,10 @@ template<typename T>
 				_node = tree_min(_node->right);
 			}
 			else {
-				node_pointer y = _node->father;
+				node_pointer y = _node->parent;
 				while (y != NULL && _node == y->right) {
 					_node = y;
-					y = y->father;
+					y = y->parent;
 				}
 				_node = y;
 			}
@@ -101,10 +96,10 @@ template<typename T>
 				_node = tree_min(_node->right);
 			}
 			else {
-				node_pointer y = _node->father;
+				node_pointer y = _node->parent;
 				while (y != NULL && _node == y->right) {
 					_node = y;
-					y = y->father;
+					y = y->parent;
 				}
 				_node = y;
 			}
@@ -112,14 +107,14 @@ template<typename T>
 		}
 
 		TreeIter& operator--() {
-			if (!_node->left->is_nil) {
+			if (_node->left && !_node->left->is_nil) {
 				_node = tree_max(_node->left);
 			}
 			else {
-				node_pointer y = _node->father;
+				node_pointer y = _node->parent;
 				while (y != NULL && _node == y->left) {
 					_node = y;
-					y = y->father;
+					y = y->parent;
 				}
 				_node = y;
 			}
@@ -142,19 +137,23 @@ template<typename T>
 			return temp;
 		}
 
-		bool operator==(const TreeIter<value_type> &other) const {
-			return this->_node == other._node;
+		node_pointer node() const {
+			return _node;
 		}
+	};	
+	template<typename A, typename B>
+	friend bool operator==(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
+		return (lhs.node() == rhs.node());
+	}
 
-		bool operator!=(const TreeIter<value_type> &other) const {
-			return this->_node != other._node;
-		}
-	};
-
+	template<typename A, typename B>
+	friend bool operator!=(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
+		return (lhs.node() != rhs.node());
+	}
 
 	public:
 		typedef Value value_type;
-		typedef Compare key_compare;
+		typedef Compare value_compare;
 		typedef Alloc	allocator_type;
 		typedef typename Alloc::template
 			                rebind<Node<Value> >::other            node_allocator;
@@ -166,15 +165,14 @@ template<typename T>
 		typedef typename allocator_type::const_pointer const_pointer;
 		typedef std::ptrdiff_t	difference_type;
 		typedef std::size_t	size_type;
-		//typedef iterator;
-		//typedef const_iterator;
-		//typedef	reverse_iterator;
-	   	//typedef const_reverse_iterator;
-		//typedef difference_type;	
+		typedef TreeIter<Value>			iterator;
+		typedef TreeIter<const Value>	const_iterator;
+		typedef	ft::reverse_iterator<iterator> reverse_iterator;
+		typedef	ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	private:
 		allocator_type				_val_alloc;
 		node_allocator				_node_alloc;
-		key_compare 				_compare;
+		value_compare 				_compare;
 		node_pointer				_nil;
 		node_pointer				_header;
 		node_pointer				_root;
@@ -239,6 +237,14 @@ template<typename T>
 				_root->right = new_node;
 			}
 			new_node->parent = root;
+			return (new_node);
+		}
+		
+		node_pointer _insert_into_tree(node_pointer new_node, node_pointer where){
+			if (_root == _header)
+				_root = new_node;
+			else
+				_insert_to_node(where, new_node);
 			return (new_node);
 		}
 
@@ -342,6 +348,51 @@ template<typename T>
 
 		//PUBLIC FUNCTIONS
 	public:
+		iterator	end(){
+			return (iterator(_header));
+		}
+		iterator	begin(){
+			return (iterator(_size == 0 ? _header : tree_min(_root)));
+		}
+	
+		pointer	create_value(const value_type &value){
+			pointer new_val = _val_alloc.allocate(1);
+			_val_alloc.construct(new_val, value);
+			return new_val;
+		}	
+		node_pointer copy_node(node_pointer other){
+			node_pointer new_node = _node_alloc.allocate(1);
+			_node_alloc.construct(new_node, Node<Value>());
+			new_node->is_black = other->is_black;
+			new_node->is_nil = other->is_nil;
+			if (other->value){
+				new_node->value = _val_alloc.allocate(1);
+				_val_alloc.construct(new_node->value, *other->value);
+			}
+			return (new_node);
+		}
+	
+		void	copy_child(node_pointer my_node, node_pointer other){
+			if (other->left->is_nil)
+				my_node->left = _nil;
+			else {
+				my_node->left = copy_node(other->left);
+				my_node->left->parent = my_node;
+				copy_child(my_node->left, other->left);
+			}
+			if (other->right->is_nil)
+				my_node->right = _nil;
+			else if (other->right->right == NULL){
+				my_node->right = _header;
+				_header->parent = my_node;
+			}
+			else{
+				my_node->right = copy_node(other->right);
+				my_node->right->parent = my_node;
+				copy_child(my_node->right, other->right);
+			}
+		}
+
 		node_pointer	search(const value_type &value, node_pointer node) const
 		{
 			if(!node || is_nil(node))
@@ -352,28 +403,68 @@ template<typename T>
 				return search(value, node->right);
 			return node;
 		}
+
+		iterator	find(const value_type& value){
+			node_pointer find_res = search(value, _root);
+			return (find_res == NULL ? end() : iterator(find_res));
+		}
+
+		const_iterator	find(const value_type& value) const{
+			node_pointer find_res = search(value, _root);
+			return (find_res == NULL ? end() : iterator(find_res));
+		}
 		
-		void /*pohui*/ insert(value_type *value){
-			node_pointer find_val = search(*value, _root);
+		ft::pair<iterator, bool> /*pohui*/ insert(value_type const &value){
+			node_pointer find_val = search(value, _root);
 			if (find_val)
-				return;
+				return ft::pair<iterator, bool>(iterator(find_val), false);
 			node_pointer new_node = _node_alloc.allocate(1);
-			_node_alloc.construct(new_node, Node<value_type>(value));
-			_val_alloc.construct(new_node->value, *value);
+			_node_alloc.construct(new_node, Node<value_type>(create_value(value)));
 			new_node->left = _nil;
 			new_node->right = _nil;
 			_insert(new_node);
-			//ft::pair<iterator, bool> res(iterator(new_node), true);
+			ft::pair<iterator, bool> res(iterator(new_node), true);
 			_insert_fixup(new_node);
 			_size++;
 			new_node = tree_max(_root);
 			new_node->right = _header;
 			_header->parent = new_node;
-			//return res;
+			return res;
 		} 
 
-		void erase(value_type *pos){
-			node_pointer y = Node(pos), x, for_free = y;
+		iterator insert(iterator position, const value_type& value){
+			node_pointer new_node = search(value,_root);
+			if (new_node)
+				return (iterator(new_node));
+			new_node = _node_alloc.allocate(1);
+			_node_alloc.construct(new_node, Node<value_type>(create_value(value)));
+			new_node->left = _nil;
+			new_node->right = _nil;
+			if (position == begin()){
+				if (position != end() && _compare(value, *position))
+					_insert_into_tree(new_node, _header->parent);
+				else
+					_insert_into_tree(new_node, _root);
+			}
+			else
+				_insert_into_tree(new_node, _root);
+			_insert_fixup(new_node);
+			_size++;
+			node_pointer max_of_tree = tree_max(_root);
+			max_of_tree->right = _header;
+			return (iterator(new_node));
+		}
+		
+		template<class InputIt>
+		void insert(typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt >::type first,
+				InputIt last) {
+		for (; first != last; ++first)
+			insert(*first);
+		}
+
+
+		void erase(iterator pos){
+			node_pointer y = pos.node(), x, for_free = y;
 			bool y_original_is_black = y->is_black;
 			if (is_nil(y->left)){
 				x = y->right;
@@ -487,19 +578,32 @@ template<typename T>
 			_root = _header;
 		}
 
-		RBTree() : _root(0), _val_alloc(allocator_type()), _node_alloc(node_allocator()), _compare(key_compare()), _size(0){
+		RBTree() : _root(0), _val_alloc(allocator_type()), _node_alloc(node_allocator()), _compare(value_compare()), _size(0){
 			init_nil_head();
 			_root = _header;
 		}
 
-		RBTree(const RBTree& src){
+		RBTree(const RBTree& src) : _compare(src._compare) {
 			*this = src;
 		}
+		template<class InputIt>
+		RBTree(typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt >::type first, InputIt last,
+		   const value_compare& comp, const allocator_type& alloc = allocator_type()):	_val_alloc(alloc),
+		   																				_node_alloc(node_allocator()),
+																						_compare(comp) {
+			init_nil_head();
+			_root = _header;
+			for (; first != last; ++first)
+				insert(*first);
+		}
+
 	
 		RBTree& operator=(const RBTree & src){
+			if (this == &src)
+				return *this;
 			this->_node_alloc = src._node_alloc;
 			this->_val_alloc = src._val_alloc;
-			this->_cmp = src._cmp;
+			this->_compare = src._compare;
 			clear_node(_root);
 			if (this->_nil == NULL)
 			init_nil_head();
@@ -521,6 +625,68 @@ template<typename T>
 			_node_alloc.deallocate(_header, 1);
 		}
 
+		size_type size() const{
+			return (_size);
+		}
+
+		size_type max_size() const{
+			return (_val_alloc.max_size());
+		}
+		
+		bool empty() const{
+			return (_size == 0);
+		}
+
+		value_compare value_comp() const {
+			return (_compare);
+		}
+		
+		void clear() {
+			clear_node(_root);
+			_root = _header;
+			_header->parent = NULL;
+			_size = 0;
+		}
+		
+		size_type count(const value_type& value) const{
+			return (find(value) != end());
+		}
+
+		iterator lower_bound(const value_type& value){
+			iterator last = end();
+			for (iterator first = begin(); first < last; ++first){
+				if(!compare(*first, value))
+					return (first);
+			}
+			return (last);
+		}
+
+		const_iterator lower_bound(const value_type& value) const{
+			const_iterator last = end();
+			for (const_iterator first = begin(); first < last; ++first){
+				if(!compare(*first, value))
+					return (first);
+			}
+			return (last);
+		}
+
+		iterator upper_bound(const value_type& value){
+			iterator last = end();
+			for (iterator first = begin(); first < last; ++first){
+				if(compare(value, *first))
+					return (first);
+			}
+			return (last);
+		}
+
+		const_iterator upper_bound(const value_type& value) const{
+			const_iterator last = end();
+			for (const_iterator first = begin(); first < last; ++first){
+				if(compare(value, *first))
+					return (first);
+			}
+			return (last);
+		}
 };
 
 
