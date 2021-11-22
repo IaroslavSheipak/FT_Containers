@@ -7,6 +7,8 @@
 #endif
 #ifdef kirill
 #include "../ft_containers/stack/stack.hpp"
+#include "../ft_containers/map/map.hpp"
+#include "../ft_containers/set/set.hpp"
 #endif
 #include "SampleClass.hpp"
 #include <time.h>

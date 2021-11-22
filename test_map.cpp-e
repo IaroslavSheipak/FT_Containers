@@ -131,11 +131,11 @@ void map_insert(){
 	std::map<char,int> mymap;
 
 	// first insert function version (single parameter):
-	mymap.insert ( std::pair<char,int>('a',100) );
-	mymap.insert ( std::pair<char,int>('z',200) );
+	mymap.insert ( ft::pair<char,int>('a',100) );
+	mymap.insert ( ft::pair<char,int>('z',200) );
 
-	std::pair<std::map<char,int>::iterator,bool> ret;
-	ret = mymap.insert ( std::pair<char,int>('z',500) );
+	ft::pair<std::map<char,int>::iterator,bool> ret;
+	ret = mymap.insert ( ft::pair<char,int>('z',500) );
 	if (ret.second==false) {
   		std::cout << "element 'z' already existed";
   		std::cout << " with a value of " << ret.first->second << '\n';
@@ -143,8 +143,8 @@ void map_insert(){
 
 	// second insert function version (with hint position):
 	std::map<char,int>::iterator it = mymap.begin();
-	mymap.insert (it, std::pair<char,int>('b',300));  // max efficiency inserting
-	mymap.insert (it, std::pair<char,int>('c',400));  // no max efficiency inserting
+	mymap.insert (it, ft::pair<char,int>('b',300));  // max efficiency inserting
+	mymap.insert (it, ft::pair<char,int>('c',400));  // no max efficiency inserting
 
 	// third insert function version (range insertion):
 	std::map<char,int> anothermap;
@@ -258,7 +258,7 @@ void map_value_comp(){
 
 	std::cout << "mymap contains:\n";
 
-	std::pair<char,int> highest = *mymap.rbegin();          // last element
+	ft::pair<char,int> highest = *mymap.rbegin();          // last element
 
 	std::map<char,int>::iterator it = mymap.begin();
 	do {
@@ -354,7 +354,7 @@ void map_equal_range(){
 	mymap['b']=20;
 	mymap['c']=30;
 
-	std::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> ret;
+	ft::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> ret;
 	ret = mymap.equal_range('b');
 
 	std::cout << "lower bound points to: ";
@@ -368,7 +368,7 @@ void map_equal_range(){
 void map_get_allocator(){
 	int psize;
 	std::map<char,int> mymap;
-	std::pair<const char,int>* p;
+	ft::pair<const char,int>* p;
 
 	// allocate an array of 5 elements using mymap's allocator:
 	p=mymap.get_allocator().allocate(5);
