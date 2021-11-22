@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RBTree.hpp"
+#include "../utility/utility.hpp"
 
 namespace ft {
 
@@ -54,7 +55,7 @@ namespace ft {
 	
 		mapped_type& operator[](const key_type& key){
 			//make_pair(key, mapped_type());
-		//	_tree.insert(make_pair(key, mapped_type())).first->second;
+		//	return	_tree.insert(make_pair(key, mapped_type())).first->second;
 			return (*((this->insert(make_pair(key,mapped_type()))).first)).second;
 		}
 
@@ -137,7 +138,7 @@ namespace ft {
 
 		void swap(map & other){
 			std::swap(this->_compare, other._compare);
-			_tree.swap(other.tree);
+			_tree.swap(other._tree);
 		}
 	
 		iterator lower_bound(const key_type& key){

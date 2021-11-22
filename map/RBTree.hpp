@@ -1,11 +1,12 @@
 #pragma once
 #include <memory>
 #include "../iterator/reverse_iterator.hpp"
+#include "../utility/utility.hpp"
 
 template<class Value>
 struct Node{
-	typedef Node*			pointer;
-
+	//typedef Node*			pointer;
+	public:
 	explicit Node(Value *srcval = 0) :	value(srcval),
 										parent(0),
 										left(0),
@@ -19,9 +20,18 @@ struct Node{
 	Node*	right;	
 	bool	is_black;
 	bool	is_nil;
-	
-	Node(pointer value, Node* node = NULL, Node* parent = NULL) :
-	   value(value), left(node), right(node), parent(parent), is_black(false) {}	
+
+	Node(const Node & other) {};
+
+	Node& operator=(const Node& other){
+		this->is_black = other.is_black;
+		this->content = other.content;
+		this->parent = other.parent;
+		this->right = other.right;
+		this->left = other.left;
+		return *this;
+	}	
+	virtual ~Node(){}
 };
 
 template<class Value, class Compare = std::less<Value>, class Alloc = std::allocator<Value> >
@@ -149,6 +159,16 @@ class RBTree{
 	template<typename A, typename B>
 	friend bool operator!=(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
 		return (lhs.node() != rhs.node());
+	}
+
+	template<typename A, typename B>
+	friend bool operator<(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
+		return (lhs.node() < rhs.node());
+	}
+
+	template<typename A, typename B>
+	friend bool operator>(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
+		return (lhs.node() > rhs.node());
 	}
 
 	public:
@@ -351,10 +371,33 @@ class RBTree{
 		iterator	end(){
 			return (iterator(_header));
 		}
+
+		const_iterator	end() const{
+			return (const_iterator(_header));
+		}
+
 		iterator	begin(){
 			return (iterator(_size == 0 ? _header : tree_min(_root)));
 		}
-	
+		const_iterator	begin() const{
+			return (const_iterator(_size == 0 ? _header : tree_min(_root)));
+		}
+
+		reverse_iterator rbegin(){
+			return (reverse_iterator(end()));
+		}	
+		const_reverse_iterator rbegin() const{
+			return (const_reverse_iterator(end()));
+		}	
+
+		reverse_iterator rend(){
+			return (reverse_iterator(begin()));
+		}	
+
+		const_reverse_iterator rend() const{
+			return (const_reverse_iterator(begin()));
+		}	
+
 		pointer	create_value(const value_type &value){
 			pointer new_val = _val_alloc.allocate(1);
 			_val_alloc.construct(new_val, value);
@@ -506,6 +549,18 @@ class RBTree{
 			}
 		}
 
+		size_type erase(const value_type& value){
+			node_pointer res = search(value, _root);
+			if (res)
+				erase(iterator(res));
+			return (res != NULL);
+		}
+
+		void erase(iterator first, iterator last){
+			while (first != last)
+				erase(first++);
+		}
+
 		void erase_fixup(node_pointer x){
 			node_pointer brother;
 			while (x != _root && x->is_black){
@@ -655,7 +710,7 @@ class RBTree{
 		iterator lower_bound(const value_type& value){
 			iterator last = end();
 			for (iterator first = begin(); first < last; ++first){
-				if(!compare(*first, value))
+				if(!_compare(*first, value))
 					return (first);
 			}
 			return (last);
@@ -664,7 +719,7 @@ class RBTree{
 		const_iterator lower_bound(const value_type& value) const{
 			const_iterator last = end();
 			for (const_iterator first = begin(); first < last; ++first){
-				if(!compare(*first, value))
+				if(!_compare(*first, value))
 					return (first);
 			}
 			return (last);
@@ -673,7 +728,7 @@ class RBTree{
 		iterator upper_bound(const value_type& value){
 			iterator last = end();
 			for (iterator first = begin(); first < last; ++first){
-				if(compare(value, *first))
+				if(_compare(value, *first))
 					return (first);
 			}
 			return (last);
@@ -682,11 +737,36 @@ class RBTree{
 		const_iterator upper_bound(const value_type& value) const{
 			const_iterator last = end();
 			for (const_iterator first = begin(); first < last; ++first){
-				if(compare(value, *first))
+				if(_compare(value, *first))
 					return (first);
 			}
 			return (last);
 		}
+
+		void swap(RBTree &other){
+			std::swap(this->_root, other._root);
+			std::swap(this->_nil, other._nil);
+			std::swap(this->_header, other._header);
+			std::swap(this->_size, other._size);
+			std::swap(this->_node_alloc, other._node_alloc);
+			std::swap(this->_val_alloc, other._val_alloc);
+			std::swap(this->_compare, other._compare);
+		}
+
+		ft::pair<iterator, iterator> equal_range(const value_type &value){
+			return (make_pair(lower_bound(value), upper_bound(value)));
+		}
+
+		//pair<const_iterator, const_iterator> equal_range(const value_type &value) const{
+		//	return (make_pair(lower_bound(value), upper_bound(value)));
+		//}
+		
+		allocator_type get_allocator() const{
+			return (_val_alloc);
+		}
 };
 
-
+template<class Content, class Compare, class Alloc>
+void swap(const  RBTree<Content, Compare, Alloc>& lhs, const  RBTree<Content, Compare, Alloc>& rhs){
+	lhs.swap(rhs);
+}
