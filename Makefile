@@ -17,7 +17,7 @@ all : $(NAME)
 
 
 comp:  
-	clang++  -g  -D $(TEST_FLAG) $(SRCS)
+	clang++ $(scary_flags) -g  -D $(TEST_FLAG) $(SRCS)
 
 all: 
 	comp

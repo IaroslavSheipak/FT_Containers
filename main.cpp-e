@@ -81,7 +81,7 @@ int main()
 	//map.erase(iter);
 //	map.clear();
 
-	test_map();
-	//test_vector();
+	//test_map();
+	test_vector();
 	return (0);
 }

@@ -148,7 +148,7 @@ void	vector_resize(){
 	myvector.resize(12);
 
 	std::cout << "myvector contains:";
-	for (int i=0;i<myvector.size();i++)
+	for (ft::vector<int>::size_type i = 0; i < myvector.size(); i++)
 		std::cout << ' ' << myvector[i];
 	std::cout << "\n\n";
 }
@@ -442,7 +442,6 @@ void vector_relational_operators(){
 
 void vector_swap_nonmb(){
 	std::cout << "Swap nonmember test:\n";
-	unsigned int i;
 	ft::vector<int> foo (3,100);   // three ints with a value of 100
 	ft::vector<int> bar (5,200);   // five ints with a value of 200
 
