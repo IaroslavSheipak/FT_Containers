@@ -5,7 +5,7 @@ else
 endif
 .PHONY:	ft std all cc
 
-scary_flags = -Wall -Werror -Wextra
+scary_flags = -Wall -Werror -Wextra 
 
 NAME = tests
 

@@ -18,13 +18,14 @@
 #include <cassert>
 #include <map>
 
-# define B_CYAN "\x1b[46;1m" <<
-# define B_RED  "\x1b[41;1m" <<
-# define YELLOW "\x1b[33;1m" <<
-# define RED    "\x1b[31;1m" <<
-# define GREEN  "\x1b[32;1m" <<
-# define DEFAULT << "\x1b[m"
+# define B_CYAN "\x1b[46;1m"
+# define B_RED  "\x1b[41;1m"
+# define YELLOW "\x1b[33;1m"
+# define RED    "\x1b[31;1m"
+# define GREEN  "\x1b[32;1m"
+# define DEFAULT "\x1b[m"
 
+void	map_iterators();
 void	map_constructor();
 void	map_destructor();
 void	map_operator_equals();

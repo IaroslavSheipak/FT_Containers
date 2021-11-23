@@ -2,7 +2,7 @@
 
 void time(clock_t end, clock_t start){
 	
-	std::cout << GREEN end - start << std::endl DEFAULT;
+	std::cout << GREEN << end - start << std::endl << DEFAULT;
 }
 
 void who_won(std::string name_of_vector, clock_t my_dur, clock_t stl_dur) {
@@ -18,8 +18,8 @@ void who_won(std::string name_of_vector, clock_t my_dur, clock_t stl_dur) {
 }
 
 void test_vector() {
-	std::cout << "VECTOR TESTS:\n";
-	std::cout << "\\\\\\\\\\\\\\\\\\\n\n";
+	std::cout << YELLOW << "VECTOR TESTS:\n" << DEFAULT;
+	std::cout << YELLOW << "\\\\\\\\\\\\\\\\\\\n\n" << DEFAULT;
 	vector_iterators();
 	vector_constructor();
 	vector_destructor();
@@ -43,14 +43,15 @@ void test_vector() {
 	vector_get_allocator();
 	vector_relational_operators();
 	vector_swap();
-	std::cout << "/////////\n";
+	std::cout << YELLOW << "/////////\n" << DEFAULT;
 }
 
 
 void test_map() {
 
-	std::cout << "MAP TESTS:\n";
-	std::cout << "\\\\\\\\\\\\\\\\\\\n\n";
+	std::cout << YELLOW << "MAP TESTS:\n" << DEFAULT;
+	std::cout << YELLOW << "\\\\\\\\\\\\\\\\\\\n\n" << DEFAULT;
+	map_iterators();
 	map_constructor();
 	map_destructor();
 	map_operator_equals();
@@ -64,7 +65,7 @@ void test_map() {
 	map_erase();
 	map_swap();
 	map_clear();
-	std::cout << "/////////\n";
+	std::cout << YELLOW << "/////////\n" << DEFAULT;
 }
 
 
@@ -81,7 +82,7 @@ int main()
 	//map.erase(iter);
 //	map.clear();
 
-	//test_map();
-	test_vector();
+	test_map();
+	//test_vector();
 	return (0);
 }
