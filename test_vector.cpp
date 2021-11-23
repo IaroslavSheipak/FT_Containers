@@ -4,13 +4,27 @@ void	vector_constructor_output_res(ft::vector<int> &vec, std::string name) {
 	std::cout << name << ": size = " << vec.size() << ", capacity = " << vec.capacity() << std::endl;
 }
 
+template< class T, class Alloc>
+void output_vector(std::string name, ft::vector<T, Alloc> &v) {
+	std::cout << "\t" << name << " contains: ";
+	for (typename ft::vector<T>::iterator it = v.begin(); it != v.end(); ++it)
+		std::cout << *it << " ";
+	if (v.size() == 0)
+		std::cout << "nothing";
+	std::cout << "\n";
+}
+
 
 void vector_iterators(){
+	std::cout << GREEN << "Vector iterator test:\n" << DEFAULT;
 	ft::vector<int>::iterator	iter;
 	ft::vector<int>::const_iterator	const_iter;
 	
 	const_iter=iter;
-	assert(iter == const_iter);
+	std::cout << "vector<int>::iterator iter;\n"
+				 "vector<int>::const_iterator const_iter;\n"
+				 "const_iter = iter;\n";
+	std::cout << "const_iter == iter: " << (iter == const_iter) << std::endl;
 	++iter;
 	iter++;
 	--iter;
@@ -20,21 +34,36 @@ void vector_iterators(){
 	iter - 5;
 	iter - const_iter;
 	const_iter - iter;
-	std::cout << "ITERATORS RELATIONAL OPERATORS" << std::endl;
-	std:: cout << (iter < const_iter) << std::endl;
-	std::cout << (iter > const_iter) << std::endl;
-	std::cout << (iter <= const_iter) << std::endl;
-	std::cout << (iter >= const_iter) << std::endl;
-	std::cout << "---------------------------------" << std::endl;
-	
 	iter += 5;
 	iter -= 5;
 	iter[5];
+	std::cout << "\t++iter;\n"
+				 "\titer++;\n"
+				 "\t--iter;\n"
+				 "\titer--;\n"
+				 "\titer + 5;\n"
+				 "\t5 + iter;\n"
+				 "\titer - 5;\n"
+				 "\titer - const_iter;\n"
+				 "\tconst_iter - iter;\n"
+				 "\titer += 5;\n"
+				 "\titer -= 5;\n"
+				 "\titer[5];\n";
+	std::cout << "no errors -> good\n";
+
+	std::cout << "ITERATORS RELATIONAL OPERATORS" << std::endl;
+	std::cout << "iter < const_iter: " << (iter < const_iter) << std::endl;
+	std::cout << "iter > const_iter: "<< (iter > const_iter) << std::endl;
+	std::cout << "iter <= const_iter: "<< (iter <= const_iter) << std::endl;
+	std::cout << "iter >= const_iter: "<< (iter >= const_iter) << std::endl;
+	std::cout << "---------------------------------" << std::endl;
+
 	std::cout << "\n\n";
 }
 
 void	vector_constructor() {
-	std::cout << "Constructors test:\n";
+	std::cout << GREEN << "Constructors test:\n" << DEFAULT;
+
 	// constructors used in the same order as described above
 	ft::vector<int> first;                                // empty vector of ints
 	vector_constructor_output_res(first, "1) first()");
@@ -52,29 +81,41 @@ void	vector_constructor() {
 	int myints[] = {16,2,77,29};
 	ft::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
 	std::cout << "int myints[] = {16,2,77,29}\n";
-	std::cout << "fifth (myints, myints + sizeof(myints) / sizeof(int) )\n";
-	std::cout << "5) The contents of fifth are:";
-	for (ft::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
-		std::cout << ' ' << *it;
+	std::cout << "5) fifth (myints, myints + sizeof(myints) / sizeof(int) )\n";
+	output_vector("fifth", fifth);
 
 	std::cout << "\n\n";
 }
 
 void	vector_destructor() {
-	std::cout << "Destructor test:\n";
+	std::cout << GREEN << "Destructor test:\n" << DEFAULT;
+
 	ft::vector<SampleClass> vec(5, SampleClass());
-	std::cout << "No error and no leaks -> destructor is ok\n\n";
+	std::cout << "vector<SampleClass> vec(5, SampleClass());\n";
+
+	std::cout << "\tNo error and no leaks -> destructor is ok\n\n";
 }
 
 void	vector_operator_equal() {
-	ft::vector<int> foo (3,0);
-	ft::vector<int> bar (5,0);
+	std::cout << GREEN << "Operator equal test:\n" << DEFAULT;
+
+	ft::vector<int> foo (3, 3);
+	ft::vector<int> bar (5, 5);
 
 	bar = foo;
 	foo = ft::vector<int>();
+	std::cout << "vector<int> foo (3, 3);\n"
+				 "vector<int> bar (5, 5);\n"
+				 "\nbar = foo;\n"
+				 "foo = ft::vector<int>();\n";
 
-	std::cout << "Size of foo: " << int(foo.size()) << '\n';
-	std::cout << "Size of bar: " << int(bar.size()) << '\n';
+	vector_constructor_output_res(bar, "bar");
+	output_vector("bar", bar);
+
+	vector_constructor_output_res(foo, "foo");
+	output_vector("foo", foo);
+
+	std::cout << "\n";
 }
 
 void	vector_begin_end(){

@@ -23,6 +23,7 @@ void test_vector() {
 	vector_iterators();
 	vector_constructor();
 	vector_destructor();
+	vector_operator_equal();
 	vector_begin_end();
 	vector_rbegin_rend();
 	vector_size();
@@ -82,7 +83,7 @@ int main()
 	//map.erase(iter);
 //	map.clear();
 
-	test_map();
-	//test_vector();
+	//test_map();
+	test_vector();
 	return (0);
 }

@@ -42,6 +42,7 @@ void	map_clear();
 
 void	vector_iterators();
 void	vector_constructor();
+void	vector_operator_equal();
 void	vector_destructor();
 void	vector_begin_end();
 void	vector_rbegin_rend();
