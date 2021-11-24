@@ -21,11 +21,19 @@ struct Node{
 	bool	is_black;
 	bool	is_nil;
 
-	Node(const Node & other) {};
+	Node( Node const & other) {
+		this->is_black = other.is_black;
+		this->value = other.value;
+		this->parent = other.parent;
+		this->is_nil = other.is_nil;
+		this->right = other.right;
+		this->left = other.left;
+	};
 
 	Node& operator=(const Node& other){
 		this->is_black = other.is_black;
-		this->content = other.content;
+		this->value = other.value;
+		this->is_nil = other.is_nil;
 		this->parent = other.parent;
 		this->right = other.right;
 		this->left = other.left;
@@ -45,16 +53,16 @@ class RBTree{
 		typedef typename ft::iterator_traits<T*>::reference 		reference;
 		typedef typename ft::iterator_traits<T*>::pointer			pointer;
 		typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
-
+		typedef Node<typename ft::remove_const<value_type>::type >* node_pointer;
 //		template <class _Cont, class _Comp, class _Alloc> friend class  RBTree;
 
-		typedef Node<T>* node_pointer;
+		//typedef Node<T>* node_pointer;
 
 	private:
 		node_pointer _node;
 
 		node_pointer tree_min(node_pointer n) const {
-			while (n->left != NULL && !n->left->is_nil)
+			while(n->left != NULL && !n->left->is_nil)
 				n = n->left;
 			return n;
 		}
@@ -70,10 +78,13 @@ class RBTree{
 
 		TreeIter(void *node): _node(static_cast<node_pointer>(node)) {}
 
-		TreeIter(const TreeIter<typename ft::remove_const<value_type>::type > & other): _node(other.node()) {}
+		TreeIter(const TreeIter<typename ft::remove_const<value_type>::type > & other)//: _node(other.node()) {}
+		{
+			*this = other;
+		}
 
 		TreeIter& operator=(const TreeIter<typename ft::remove_const<value_type>::type>& other) {
-			this->_node = other._node;
+			this->_node = other.node();
 			return *this;
 		}
 
@@ -86,7 +97,7 @@ class RBTree{
 		}
 
 		TreeIter& operator++() {
-			if (!_node->right->is_nil) {
+			if (_node->right && !_node->right->is_nil) {
 				_node = tree_min(_node->right);
 			}
 			else {
@@ -133,14 +144,14 @@ class RBTree{
 
 		TreeIter operator--(int) {
 			TreeIter<value_type> temp = *this;
-			if (!_node->left->is_nil) {
+			if (_node->left && !_node->left->is_nil) {
 				_node = tree_max(_node->left);
 			}
 			else {
-				node_pointer y = _node->father;
+				node_pointer y = _node->parent;
 				while (y != NULL && _node == y->left) {
 					_node = y;
-					y = y->father;
+					y = y->parent;
 				}
 				_node = y;
 			}
@@ -151,6 +162,7 @@ class RBTree{
 			return _node;
 		}
 	};	
+
 	template<typename A, typename B>
 	friend bool operator==(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
 		return (lhs.node() == rhs.node());
@@ -159,16 +171,6 @@ class RBTree{
 	template<typename A, typename B>
 	friend bool operator!=(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
 		return (lhs.node() != rhs.node());
-	}
-
-	template<typename A, typename B>
-	friend bool operator<(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
-		return (lhs.node() < rhs.node());
-	}
-
-	template<typename A, typename B>
-	friend bool operator>(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
-		return (lhs.node() > rhs.node());
 	}
 
 	public:
@@ -200,13 +202,13 @@ class RBTree{
 		
 		//HELPER FUNCTIONS
 		node_pointer	tree_min(node_pointer n){
-			while (n->left != _nil)
+			while (n != NULL && !is_nil(n->left))
 				n = n->left;
 			return n;
 		}
 		
 		node_pointer	tree_max(node_pointer n){
-			while (n->right != _nil)
+			while (n != NULL && !is_nil(n->right))
 				n = n->right;
 			return n;
 		}
@@ -215,27 +217,35 @@ class RBTree{
 			node_pointer y;
 
 			y = node->left;
-			if (y->right != _nil)
+			node->left = y->right;
+			if (!is_nil(y->right))
 				y->right->parent = node;
-			if (node == _root)
-				_root = y;
-			else if (node == node->parent->right)
-				node->parent->right = y;
-			else
-				node->parent->left = y;
-		}
-		void 	_rotate_left(node_pointer	node){
-			node_pointer y;
-
-			y = node->right;
-			if (y->left != _nil)
-				y->left->parent = node;
-			if (node == _root)
+			y->parent = node->parent;
+			if (node->parent == NULL)
 				_root = y;
 			else if (node == node->parent->left)
 				node->parent->left = y;
 			else
 				node->parent->right = y;
+			y->right = node;
+			node->parent = y;
+		}
+		void 	_rotate_left(node_pointer	node){
+			node_pointer y;
+
+			y = node->right;
+			node->right = y->left;
+			if (!is_nil(y->left))
+				y->left->parent = node;
+			y->parent = node->parent;
+			if (node->parent == NULL)
+				_root = y;
+			else if (node == node->parent->left)
+				node->parent->left = y;
+			else
+				node->parent->right = y;
+			y->left = node;
+			node->parent = y;
 		}
 		node_pointer	_insert(node_pointer new_node){
 			if (_root == _header)
@@ -254,7 +264,7 @@ class RBTree{
 			else{
 				if (!is_nil(root->right))
 					return (_insert_to_node(root->right, new_node));
-				_root->right = new_node;
+				root->right = new_node;
 			}
 			new_node->parent = root;
 			return (new_node);
@@ -318,12 +328,13 @@ class RBTree{
 
 		void clear_node(node_pointer node){
 			if (node && !is_nil(node)) {
-				clear_node(node->right);
-				clear_node(node->left);
+				//clear_node(node->right);
+				//clear_node(node->left);
+				//_val_alloc.destroy(node->value);
+				//_val_alloc.deallocate(node->value, 1);
+				//_node_alloc.deallocate(node, 1);
+				
 			}
-				_val_alloc.destroy(node->value);
-				_val_alloc.deallocate(node->value, 1);
-				_node_alloc.deallocate(node, 1);
 		}
 	
 		void	init_nil_head(){
@@ -454,7 +465,7 @@ class RBTree{
 
 		const_iterator	find(const value_type& value) const{
 			node_pointer find_res = search(value, _root);
-			return (find_res == NULL ? end() : iterator(find_res));
+			return (find_res == NULL ? end() : const_iterator(find_res));
 		}
 		
 		ft::pair<iterator, bool> /*pohui*/ insert(value_type const &value){
@@ -465,7 +476,7 @@ class RBTree{
 			_node_alloc.construct(new_node, Node<value_type>(create_value(value)));
 			new_node->left = _nil;
 			new_node->right = _nil;
-			_insert(new_node);
+			_insert_into_tree(new_node, _root);
 			ft::pair<iterator, bool> res(iterator(new_node), true);
 			_insert_fixup(new_node);
 			_size++;
@@ -485,6 +496,12 @@ class RBTree{
 			new_node->right = _nil;
 			if (position == begin()){
 				if (position != end() && _compare(value, *position))
+					_insert_into_tree(new_node, tree_min(_root));
+				else
+					_insert_into_tree(new_node, _root);
+			}
+			else if (position == end()){
+				if (position != begin() && _compare(*(--position), value))
 					_insert_into_tree(new_node, _header->parent);
 				else
 					_insert_into_tree(new_node, _root);
@@ -495,6 +512,7 @@ class RBTree{
 			_size++;
 			node_pointer max_of_tree = tree_max(_root);
 			max_of_tree->right = _header;
+			_header->parent = max_of_tree;
 			return (iterator(new_node));
 		}
 		
@@ -628,7 +646,7 @@ class RBTree{
 		}
 		//CONSTRUCTORS
 		RBTree(const Compare &comp, const allocator_type& a = allocator_type()):
-				_root(0), _val_alloc(a), _node_alloc(node_allocator()), _compare(comp), _size(0){
+				 _val_alloc(a), _node_alloc(node_allocator()), _compare(comp), _root(0), _size(0){
 			init_nil_head();
 			_root = _header;
 		}
@@ -638,7 +656,7 @@ class RBTree{
 			_root = _header;
 		}
 
-		RBTree(const RBTree& src) : _compare(src._compare) {
+		RBTree(const RBTree& src) :  _compare(src._compare), _root(NULL) {
 			*this = src;
 		}
 		template<class InputIt>
@@ -659,11 +677,12 @@ class RBTree{
 			this->_node_alloc = src._node_alloc;
 			this->_val_alloc = src._val_alloc;
 			this->_compare = src._compare;
-			clear_node(_root);
-			if (this->_nil == NULL)
-			init_nil_head();
+			if (this->_root == NULL)
+				init_nil_head();
+			else
+				clear_node(_root);
 			if (src._size == 0)
-			this->_root = this->_header;
+				this->_root = this->_header;
 			else {
 				this->_root = copy_node(src._root);
 				copy_child(this->_root, src._root);
@@ -673,7 +692,7 @@ class RBTree{
 		}
 
 		~RBTree(){
-			//clear_node(_root);
+			clear_node(_root);
 			_val_alloc.destroy(_header->value);
 			_val_alloc.deallocate(_header->value, 1);
 			_node_alloc.deallocate(_nil, 1);
@@ -709,7 +728,7 @@ class RBTree{
 
 		iterator lower_bound(const value_type& value){
 			iterator last = end();
-			for (iterator first = begin(); first < last; ++first){
+			for (iterator first = begin(); first != last; ++first){
 				if(!_compare(*first, value))
 					return (first);
 			}
@@ -718,7 +737,7 @@ class RBTree{
 
 		const_iterator lower_bound(const value_type& value) const{
 			const_iterator last = end();
-			for (const_iterator first = begin(); first < last; ++first){
+			for (const_iterator first = begin(); first != last; ++first){
 				if(!_compare(*first, value))
 					return (first);
 			}
@@ -727,7 +746,7 @@ class RBTree{
 
 		iterator upper_bound(const value_type& value){
 			iterator last = end();
-			for (iterator first = begin(); first < last; ++first){
+			for (iterator first = begin(); first != last; ++first){
 				if(_compare(value, *first))
 					return (first);
 			}
@@ -736,7 +755,7 @@ class RBTree{
 
 		const_iterator upper_bound(const value_type& value) const{
 			const_iterator last = end();
-			for (const_iterator first = begin(); first < last; ++first){
+			for (const_iterator first = begin(); first != last; ++first){
 				if(_compare(value, *first))
 					return (first);
 			}
@@ -764,7 +783,25 @@ class RBTree{
 		allocator_type get_allocator() const{
 			return (_val_alloc);
 		}
+		
+		template<typename A, typename B>
+		friend bool operator==(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
+			return (lhs.node() == rhs.node());
+		}
+
+		template<typename A, typename B>
+		friend bool operator!=(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
+			return (lhs.node() != rhs.node());
+		}
+
 };
+
+template<class Content, class Compare, class Alloc>
+bool operator==(const RBTree<Content, Compare, Alloc>& lhs, const RBTree<Content, Compare, Alloc>& rhs){
+	if (lhs.size() != rhs.size())
+		return false;
+	return true;
+}
 
 template<class Content, class Compare, class Alloc>
 void swap(const  RBTree<Content, Compare, Alloc>& lhs, const  RBTree<Content, Compare, Alloc>& rhs){

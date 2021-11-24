@@ -185,13 +185,13 @@ template< typename L>class RandomAccessIterator
 		//range
 		template <class InputIterator>
         	 vector (InputIterator first, InputIterator last,
-                 const allocator_type& alloc = allocator_type(), typename enable_if<!is_integral<InputIterator>::value>::type* = 0){
+                 const allocator_type& alloc = allocator_type(), typename enable_if<!is_integral<InputIterator>::value>::type* = 0) : _allocator(alloc){
 			if (first > last)
 				throw std::length_error("vector");
 			_size = last - first;
 			_capacity = _size;
 			_first = _allocator.allocate(_capacity);
-			for (difference_type i = 0; i < _size; i++)
+			for (difference_type i = 0; i < static_cast<difference_type>(_size); i++)
 				_allocator.construct(_first + i, *(first + i));
 		 }
 
@@ -279,7 +279,7 @@ template< typename L>class RandomAccessIterator
 				_allocator.deallocate(newarr, n);
 				throw;
 			}
-			for(int i = 0; i < _size; i++)
+			for(size_type i = 0; i < _size; i++)
 				_allocator.destroy(_first + i);
 			if(_capacity)
 				_allocator.deallocate(_first, _capacity);
@@ -414,7 +414,7 @@ template< typename L>class RandomAccessIterator
 				_first = new_arr;
 			}
 			else {
-				for (size_type i = _size; i > start; i--){
+				for (size_type i = _size; i > static_cast<size_type>(start); i--){
 					_allocator.destroy(_first + i);
 					_allocator.construct(_first + i, *(_first + i - 1));
 				}
@@ -447,7 +447,7 @@ template< typename L>class RandomAccessIterator
 				_first = new_arr;
 			}
 			else {
-				for (size_type i = _size; i > start; i--) {
+				for (size_type i = _size; i > static_cast<size_type>(start); i--) {
 					_allocator.destroy(_first + i + n - 1);
 					_allocator.construct(_first + i + n - 1, *(_first + i - 1));
 				}
@@ -471,7 +471,7 @@ template< typename L>class RandomAccessIterator
 				size_type new_cap = _capacity * 2 >= _size + count ? _capacity * 2 : _size + count;
 				pointer new_arr = _allocator.allocate(new_cap);
 				std::uninitialized_copy(begin(), position, iterator(new_arr));
-				for (size_type i = 0; i < count; i++, first++)
+				for (size_type i = 0; i < static_cast<size_type>(count); i++, first++)
 					_allocator.construct(new_arr + start + i, *first);
 				std::uninitialized_copy(position, end(), iterator(new_arr + start + count));
 				for (size_type i = 0; i < _size; i++)
@@ -482,11 +482,11 @@ template< typename L>class RandomAccessIterator
 				_first = new_arr;
 			}
 			else {
-				for (size_type i = _size; i > start; i--) {
+				for (size_type i = _size; i > static_cast<size_type>(start); i--) {
 					_allocator.destroy(_first + i + count - 1);
 					_allocator.construct(_first + i + count - 1, *(_first + i - 1));
 				}
-				for (size_type i = 0; i < count; i++, first++) {
+				for (size_type i = 0; i < static_cast<size_type>(count); i++, first++) {
 					_allocator.destroy(_first + i + count);
 					_allocator.construct(_first + start + i, *first);
 				}
@@ -530,7 +530,7 @@ template< typename L>class RandomAccessIterator
 			std::copy(position + 1, end(), position);
 			_size--;
 			_allocator.destroy(_first + _size - 1);
-			return (d == _size ? end() : iterator(_first + d));
+			return (d == static_cast<difference_type>(_size) ? end() : iterator(_first + d));
 		}
 
 		//range

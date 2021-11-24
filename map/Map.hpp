@@ -56,7 +56,7 @@ namespace ft {
 		mapped_type& operator[](const key_type& key){
 			//make_pair(key, mapped_type());
 		//	return	_tree.insert(make_pair(key, mapped_type())).first->second;
-			return (*((this->insert(make_pair(key,mapped_type()))).first)).second;
+			return (*((this->insert(ft::make_pair(key,mapped_type()))).first)).second;
 		}
 
 		allocator_type get_allocator() const{
@@ -95,7 +95,7 @@ namespace ft {
 			return(_tree.rbegin());
 		}
 
-		iterator rend(){
+		reverse_iterator rend(){
 			return(_tree.rend());
 		}
 
@@ -164,8 +164,47 @@ namespace ft {
 		pair<const_iterator, const_iterator> equal_range(const key_type & key) const{
 			return (_tree.equal_range(make_pair(key, mapped_type())));
 		}	
+
+		template<class _Key, class _T, class _Compare, class _Alloc>
+		friend bool operator==(const map<_Key, _T, _Compare, _Alloc> & lhs,
+				const map<_Key, _T, _Compare, _Alloc>& rhs);
+
+		template<class _Key, class _T, class _Compare, class _Alloc>
+		friend bool operator<(const map<_Key, _T, _Compare, _Alloc> & lhs,
+				const map<_Key, _T, _Compare, _Alloc>& rhs);
 	};
-	
+
+	template<class Key, class T, class Compare, class Alloc>
+	bool operator==(const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs){
+			return (lhs._tree == rhs._tree); 
+	}
+
+	template<class Key, class T, class Compare, class Alloc>
+	bool operator!=(const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs){
+			return !(lhs == rhs); 
+	}
+
+	template<class Key, class T, class Compare, class Alloc>
+	bool operator<(const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs){
+			return (lhs._tree < rhs._tree);
+	}
+
+	template<class Key, class T, class Compare, class Alloc>
+	bool operator>(const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs){
+			return (rhs > lhs);
+	}
+
+	template<class Key, class T, class Compare, class Alloc>
+	bool operator<=(const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs){
+			return !(lhs > rhs);
+	}
+
+	template<class Key, class T, class Compare, class Alloc>
+	bool operator>=(const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs){
+			return !(lhs < rhs);
+	}
+
+
 	template<class Key, class T, class Compare, class Alloc>
 	void swap(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs){
 		lhs.swap(rhs);
