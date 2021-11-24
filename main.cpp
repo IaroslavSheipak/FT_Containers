@@ -28,6 +28,7 @@ void test_vector() {
 	vector_rbegin_rend();
 	vector_size();
 	vector_max_size_capacity();
+	vector_resize();
 	vector_empty();
 	vector_reserve();
 	vector_operator_brackets();

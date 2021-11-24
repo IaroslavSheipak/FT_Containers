@@ -70,12 +70,15 @@ void	vector_constructor() {
 
 	ft::vector<int> second (4, 100);                       // four ints with value 100
 	vector_constructor_output_res(second, "2) second(4, 100)");
+	output_vector("second", second);
 
 	ft::vector<int> third (second.begin(),second.end());  // iterating through second
 	vector_constructor_output_res(third, "3) third(second.begin(),second.end())");
+	output_vector("third", third);
 
 	ft::vector<int> fourth (third);                       // a copy of third
 	vector_constructor_output_res(fourth, "4) fourth (third)");
+	output_vector("fourth", fourth);
 
 	// the iterator constructor can also be used to construct from arrays:
 	int myints[] = {16,2,77,29};
@@ -107,7 +110,7 @@ void	vector_operator_equal() {
 	std::cout << "vector<int> foo (3, 3);\n"
 				 "vector<int> bar (5, 5);\n"
 				 "\nbar = foo;\n"
-				 "foo = ft::vector<int>();\n";
+				 "foo = vector<int>();\n";
 
 	vector_constructor_output_res(bar, "bar");
 	output_vector("bar", bar);
@@ -119,78 +122,90 @@ void	vector_operator_equal() {
 }
 
 void	vector_begin_end(){
-	std::cout << "Begin - End test:\n";
+	std::cout << GREEN << "Begin - End test:\n" << DEFAULT;
 
 	ft::vector<int> myvector;
 	for (int i=1; i<=5; i++) myvector.push_back(i);
 	std::cout << "for (int i=1; i<=5; i++) myvector.push_back(i);\n";
 
-	std::cout << "myvector contains:";
-	for (ft::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
-		std::cout << ' ' << *it;
+	output_vector("myvector", myvector);
 	std::cout << "\n\n";
 }
 
 void	vector_rbegin_rend(){
-	std::cout << "Rbegin - Rend test:\n";
+	std::cout << GREEN << "Rbegin - Rend test:\n" << DEFAULT;
+
 	ft::vector<int> myvector (5);  // 5 default-constructed ints
 
 	int i=0;
-
 	ft::vector<int>::reverse_iterator rit = myvector.rbegin();
 	for (; rit!= myvector.rend(); ++rit)
-	*rit = ++i;
+		*rit = ++i;
 
-	std::cout << "myvector contains:";
-	for (ft::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
-	std::cout << ' ' << *it;
+	std::cout << "int i=0;\n"
+				 "vector<int>::reverse_iterator rit = myvector.rbegin();\n"
+				 "for (; rit!= myvector.rend(); ++rit)\n"
+				 "\t*rit = ++i;\n";
+
+	output_vector("myvector", myvector);
 	std::cout << "\n\n";
 }
 
 void	vector_size(){
-	std::cout << "Size() test:\n";
+	std::cout << GREEN << "Size() test:\n" << DEFAULT;
+
 	ft::vector<int> myints;
+	std::cout << "vector<int> myints;\n";
 	std::cout << "0. size: " << myints.size() << '\n';
-
+	std::cout << "\n";
 	for (int i=0; i<10; i++) myints.push_back(i);
+	std::cout << "for (int i=0; i<10; i++) myints.push_back(i);\n";
 	std::cout << "1. size: " << myints.size() << '\n';
-
-	myints.insert (myints.end(),10,100);
+	std::cout << "\n";
+	myints.insert (myints.end(), 10, 100);
+	std::cout << "myints.insert (myints.end(), 10, 100);\n";
 	std::cout << "2. size: " << myints.size() << '\n';
-
+	std::cout << "\n";
 	myints.pop_back();
+	std::cout << "myints.pop_back();\n";
 	std::cout << "3. size: " << myints.size() << '\n';
 	std::cout << "\n";
 }
 
-void	vector_max_size_capacity(){
-	std::cout << "Size, max_size and capacity after inserting 100 elems using push_back():\n";
+void	vector_max_size_capacity() {
+	std::cout << GREEN << "Max_size() and capacity() test:\n" << DEFAULT;
 	ft::vector<int> myvector;
 
 	// set some content in the vector:
 	for (int i=0; i<100; i++)
 		myvector.push_back(i);
-	std::cout << "size: " << myvector.size() << "\n";
-	std::cout << "capacity: " << myvector.capacity() << "\n";
-	std::cout << "max_size: " << myvector.max_size() << "\n";
+	std::cout << "Size, max_size and capacity after inserting 100 elems using push_back():\n";
+	std::cout << "size:		=>" << myvector.size() << "\n";
+	std::cout << "capacity:	=>" << myvector.capacity() << "\n";
+	std::cout << "max_size:	=>" << myvector.max_size() << "\n";
 	std::cout << "\n";
 }
 
 
-void	vector_resize(){
-	std::cout << "Resize test:\n";
+void	vector_resize() {
+	std::cout << GREEN << "Resize test:\n" << DEFAULT;
+
 	ft::vector<int> myvector;
 
 	// set some initial content:
-	for (int i=1;i<10;i++) myvector.push_back(i);
+	for (int i = 1; i < 10; i++) myvector.push_back(i);
 
 	myvector.resize(5);
 	myvector.resize(8,100);
 	myvector.resize(12);
+	std::cout << "vector<int> myvector;\n"
+				 "for (int i = 1; i < 10; i++) myvector.push_back(i);\n"
+				 "myvector.resize(5);\n"
+				 "myvector.resize(8,100);\n"
+				 "myvector.resize(12);\n";
 
-	std::cout << "myvector contains:";
-	for (ft::vector<int>::size_type i = 0; i < myvector.size(); i++)
-		std::cout << ' ' << myvector[i];
+	vector_constructor_output_res(myvector, "myvector");
+	output_vector("myvector", myvector);
 	std::cout << "\n\n";
 }
 

@@ -48,6 +48,7 @@ void	vector_begin_end();
 void	vector_rbegin_rend();
 void	vector_size();
 void	vector_max_size_capacity();
+void	vector_resize();
 void	vector_empty();
 void	vector_reserve();
 void	vector_operator_brackets();
