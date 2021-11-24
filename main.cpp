@@ -44,7 +44,6 @@ void test_vector() {
 	vector_clear();
 	vector_get_allocator();
 	vector_relational_operators();
-	vector_swap();
 	std::cout << YELLOW << "/////////\n" << DEFAULT;
 }
 
@@ -73,18 +72,13 @@ void test_map() {
 
 int main()
 {
-	
-	//RBTree<int> tree;
-//	ft::map<int, int> map;
-	//int *num = new int(5);
-//	int num = 5;
-//	map[num] = 6;
-//	ft::map<int, int>::iterator iter = map.find(num);
-//	map.insert(ft::pair<int, int>(5, 5));
-	//map.erase(iter);
-//	map.clear();
 
-	//test_map();
-	test_vector();
+//	std::map<int, int, std::greater<int> > mymap ;
+//	std::map<int, int>::iterator it;
+//	it = mymap.upper_bound(0);
+
+
+	test_map();
+	//test_vector();
 	return (0);
 }

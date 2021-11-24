@@ -43,6 +43,7 @@ void map_iterators(){
 	it2--;
 	std::cout << "++it2;\nit2--;\n";
 	std::cout << "it == it2: " << (it == it2) << std::endl;
+	it2 = it;
 	//it = it2;  // it doesn't work
 
 	std::cout << "\n";
