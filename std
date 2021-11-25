@@ -26,7 +26,6 @@ iter <= const_iter: 1
 iter >= const_iter: 1
 ---------------------------------
 
-
 [32;1mConstructors test:
 [m1) first(): size = 0, capacity = 0
 2) second(4, 100): size = 4, capacity = 4
@@ -38,7 +37,6 @@ iter >= const_iter: 1
 int myints[] = {16,2,77,29}
 5) fifth (myints, myints + sizeof(myints) / sizeof(int) )
 	fifth contains: 16 2 77 29 
-
 
 [32;1mDestructor test:
 [mvector<SampleClass> vec(5, SampleClass());
@@ -59,14 +57,12 @@ foo: size = 0, capacity = 3
 [mfor (int i=1; i<=5; i++) myvector.push_back(i);
 	myvector contains: 1 2 3 4 5 
 
-
 [32;1mRbegin - Rend test:
 [mint i=0;
 vector<int>::reverse_iterator rit = myvector.rbegin();
 for (; rit!= myvector.rend(); ++rit)
 	*rit = ++i;
 	myvector contains: 5 4 3 2 1 
-
 
 [32;1mSize() test:
 [mvector<int> myints;
@@ -96,71 +92,189 @@ myvector.resize(12);
 myvector: size = 12, capacity = 16
 	myvector contains: 1 2 3 4 5 100 100 100 0 0 0 0 
 
+[32;1mEmpty test:
+[mvector<int> myvector;
+is empty: 1
+for (int i = 1; i <= 10; i++) myvector.push_back(i);
+is empty: 0
+myvector = vector<int>();
+is empty: 1
 
-Empty test:
-total: 55
-
-Reserve test:
+[32;1mReserve test:
+[mvector<int>::size_type sz;
+vector<int> foo;
+sz = foo.capacity();
 making foo grow:
-capacity changed: 1
-capacity changed: 2
-capacity changed: 4
-capacity changed: 8
-capacity changed: 16
-capacity changed: 32
-capacity changed: 64
-capacity changed: 128
+	capacity changed: 1
+	capacity changed: 2
+	capacity changed: 4
+	capacity changed: 8
+	capacity changed: 16
+	capacity changed: 32
+	capacity changed: 64
+	capacity changed: 128
+vector<int> bar;
+sz = bar.capacity();
+bar.reserve(100);
 making bar grow:
-capacity changed: 100
+	capacity changed: 100
 
-operator brackets test:
-myvector contains: 9 8 7 6 5 4 3 2 1 0
+[32;1mOperator brackets test:
+[mvector<int> myvector (10);
+for (unsigned i = 0; i < myvector.size(); i++)
+	myvector[i] = i;
+	myvector contains: 0 1 2 3 4 5 6 7 8 9 
+for (unsigned i = 0; i < myvector.size() / 2; i++) {
+	int temp = myvector[myvector.size() - 1 - i];
+	myvector[myvector.size() - 1 - i] = myvector[i];
+	myvector[i] = temp;
+}
+	myvector contains: 9 8 7 6 5 4 3 2 1 0 
 
-At test:
-myvector contains: 0 1 2 3 4 5 6 7 8 9
+[32;1mAt test:
+[mvector<int> myvector (10);
+for (unsigned i=0; i<myvector.size(); i++)
+	myvector.at(i)=i;
+	myvector contains: 0 1 2 3 4 5 6 7 8 9 
+try {
+	myvector.at(100) = 1;
+} catch(std::exception &e) {
+	std::cout << e.what() << std::endl;
+}
+vector
 
-Front() test:
+[32;1mFront() test:
+[mvector<int> myvector;
+myvector.push_back(78);
+myvector.push_back(16);
+// now front equals 78, and back 16
+myvector.front() -= myvector.back();
 myvector.front() is now 62
 
-Back() test:
-myvector contains: 10 9 8 7 6 5 4 3 2 1 0
+[32;1mBack() test:
+[mvector<int> myvector;
+myvector.push_back(10);
+while (myvector.back() != 0) {
+	myvector.push_back ( myvector.back() -1 );
+}
+	myvector contains: 10 9 8 7 6 5 4 3 2 1 0 
 
-Assign test:
-Size of first: 7
-Size of second: 5
-Size of third: 3
+[32;1mAssign test:
+[mvector<int> first;
+vector<int> second;
+vector<int> third;
 
-Push_back test:
+first.assign (7, 100);
+	first contains: 100 100 100 100 100 100 100 
+
+second.assign (first.begin() + 1, first.end() - 1);
+	second contains: 100 100 100 100 100 
+
+int myints[] = {1776,7,4};
+third.assign (myints, myints+3);
+	third contains: 1776 7 4 
+
+[32;1mPush_back test:
+[mvector<int> myvector;
+for(int i = 0; i < 1000; i++)
+	myvector.push_back (i)
 myvector stores 1000 numbers.
 
-Pop_back test:
+[32;1mPop_back test:
+[mvector<int> myvector;
+int sum = 0;
+myvector.push_back (100);
+myvector.push_back (200);
+myvector.push_back (300);
+while (!myvector.empty()) {
+	sum+=myvector.back();
+	myvector.pop_back();
+}
 The elements of myvector add up to 600
 
-Insert test:
-myvector contains: 501 502 503 300 300 400 400 200 100 100 100
+[32;1mInsert test:
+[mvector<int> myvector (3, 100);
+vector<int>::iterator it;
+it = myvector.insert (myvector.begin(), 200);
+	myvector contains: 200 100 100 100 
 
-Erase test:
-myvector contains: 4 5 7 8 9 10
+myvector.insert (it, 2, 300);
+	myvector contains: 300 300 200 100 100 100 
 
-Swap test:
-foo contains: 200 200 200 200 200
-bar contains: 100 100 100
+// it no longer valid, get a new one:
+it = myvector.begin();
+vector<int> anothervector (2, 400);
+myvector.insert (it + 2, anothervector.begin(), anothervector.end());
+	myvector contains: 300 300 400 400 200 100 100 100 
 
-Clear test:
-myvector contains: 100 200 300
-myvector contains: 1101 2202
+int myarray [] = { 501, 502, 503 };
+myvector.insert (myvector.begin(), myarray, myarray + 3);
+	myvector contains: 501 502 503 300 300 400 400 200 100 100 100 
 
-Get_allocator() test:
+[32;1mErase test:
+[mvector<int> myvector;
+for (int i = 1; i <= 10; i++) myvector.push_back(i);
+	myvector contains: 1 2 3 4 5 6 7 8 9 10 
+myvector.erase (myvector.begin() + 5);
+	myvector contains: 1 2 3 4 5 7 8 9 10 
+myvector.erase (myvector.begin(), myvector.begin() + 3);
+	myvector contains: 4 5 7 8 9 10 
+
+[32;1mSwap test:
+[mvector<int> foo (3, 100);   // three ints with a value of 100
+vector<int> bar (5, 200);   // five ints with a value of 200
+foo.swap(bar);
+	foo contains: 200 200 200 200 200 
+	bar contains: 100 100 100 
+
+[32;1mClear test:
+[mvector<int> myvector;
+myvector.push_back (100);
+myvector.push_back (200);
+myvector.push_back (300);
+	myvector contains: 100 200 300 
+myvector.clear();
+	myvector contains: nothing
+myvector.push_back (1101);
+myvector.push_back (2202);
+	myvector contains: 1101 2202 
+
+[32;1mGet_allocator() test:
+[mvector<int> myvector;
+int * p;
+unsigned int i;
+p = myvector.get_allocator().allocate(5);
+for (i = 0; i < 5; i++)
+	myvector.get_allocator().construct(&p[i], i);
 The allocated array contains: 0 1 2 3 4
+for (i = 0; i < 5; i++)
+	myvector.get_allocator().destroy(&p[i]);
+myvector.get_allocator().deallocate(p, 5);
 
-Relational operators test:
-foo and bar are not equal
-foo is less than bar
-foo is less than or equal to bar
+[32;1mRelational operators test:
+[mvector<int> foo (3, 100);
+vector<int> bar (2, 200);
 
-Swap test:
-foo contains: 200 200 200 200 200
-bar contains: 100 100 100
+foo == bar: 0
+foo != bar: 1
+foo >  bar: 0
+foo <  bar: 1
+foo >= bar: 0
+foo <= bar: 1
+
+[32;1mSwap nonmember test:
+[mvector<int> foo (3, 100);
+vector<int> bar (5, 200);
+foo: size = 3, capacity = 3
+	foo contains: 100 100 100 
+bar: size = 5, capacity = 5
+	bar contains: 200 200 200 200 200 
+
+std::swap(foo, bar);
+foo: size = 5, capacity = 5
+	foo contains: 200 200 200 200 200 
+bar: size = 3, capacity = 3
+	bar contains: 100 100 100 
 
 [33;1m/////////
 [m

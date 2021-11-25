@@ -13,15 +13,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9060aff9-4f6f-4cb1-89fe-89981c203b16" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ft" beforeDir="false" afterPath="$PROJECT_DIR$/ft" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp-e" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp-e" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp-e" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/std" beforeDir="false" afterPath="$PROJECT_DIR$/std" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_header.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/test_header.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_map.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test_map.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_map.cpp-e" beforeDir="false" afterPath="$PROJECT_DIR$/test_map.cpp-e" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_map.cpp-e" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/test_vector.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test_vector.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_vector.cpp-e" beforeDir="false" afterPath="$PROJECT_DIR$/test_vector.cpp-e" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_vector.cpp-e" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +32,14 @@
   </component>
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MakefileLocalSettings">
     <option name="availableProjects">
@@ -58,6 +68,7 @@
       </map>
     </option>
   </component>
+  <component name="ProjectId" id="21PTogfXgKR6Rqhn7Ezk8F5T6Lz" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -74,9 +85,9 @@
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
@@ -93,7 +104,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1637755291152</updated>
-      <workItem from="1637755292915" duration="9809000" />
+      <workItem from="1637755292915" duration="9846000" />
+      <workItem from="1637841901950" duration="14206000" />
     </task>
     <servers />
   </component>
@@ -110,5 +122,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

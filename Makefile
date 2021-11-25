@@ -22,16 +22,18 @@ comp:
 all: 
 	comp
 ft:  
-	sed -i -e  's/std::vector/ft::vector/g' main.cpp
-	sed -i -e  's/std::vector/ft::vector/g' test_vector.cpp
-	sed -i -e  's/std::map/ft::map/g' test_map.cpp
-	sed -i -e  's/std::pair/ft::pair/g' test_map.cpp
+	sed -i ''  's/std::vector/ft::vector/g' main.cpp
+	sed -i ''  's/std::vector/ft::vector/g' test_vector.cpp
+	sed -i ''  's/std::map/ft::map/g' test_map.cpp
+	sed -i ''  's/std::pair/ft::pair/g' test_map.cpp
+	sed -i ''  's/std::make_pair/ft::make_pair/g' test_map.cpp
 	make comp
 std: 
-	sed -i -e  's/ft::vector/std::vector/g' main.cpp
-	sed -i -e 's/ft::vector/std::vector/g' test_vector.cpp
-	sed -i -e 's/ft::map/std::map/g' test_map.cpp
-	sed -i -e 's/ft::pair/std::pair/g' test_map.cpp
+	sed -i ''  's/ft::vector/std::vector/g' main.cpp
+	sed -i '' 's/ft::vector/std::vector/g' test_vector.cpp
+	sed -i '' 's/ft::map/std::map/g' test_map.cpp
+	sed -i '' 's/ft::pair/std::pair/g' test_map.cpp
+	sed -i '' 's/ft::make_pair/std::make_pair/g' test_map.cpp
 
 	make comp
 

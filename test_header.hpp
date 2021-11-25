@@ -23,7 +23,10 @@
 # define YELLOW "\x1b[33;1m"
 # define RED    "\x1b[31;1m"
 # define GREEN  "\x1b[32;1m"
+# define BLUE    "\x1b[34;1m"
 # define DEFAULT "\x1b[m"
+
+// map
 
 void	map_iterators();
 void	map_constructor();
@@ -39,6 +42,19 @@ void	map_insert();
 void	map_erase();
 void	map_swap();
 void	map_clear();
+void	map_swap_nonmb();
+
+// performance
+
+void map_insert_val_performance();
+void map_insert_hint_performance();
+void map_insert_iterator_performance();
+void map_erase_pos_performance();
+void map_erase_val_performance();
+void map_erase_iterator_performance();
+void map_find_performance();
+
+// vector
 
 void	vector_iterators();
 void	vector_constructor();
@@ -64,4 +80,17 @@ void	vector_swap();
 void	vector_clear();
 void	vector_get_allocator();
 void	vector_relational_operators();
-void	vector_swap();
+void	vector_swap_nonmb();
+
+// performance
+
+void	vector_push_back_performance();
+void	vector_insert_val_performance();
+void	vector_insert_fill_performance();
+void	vector_insert_iterator_performance();
+void	vector_erase_pos_performance();
+void	vector_erase_iterator_performance();
+void	vector_reserve_performance();
+void	vector_resize_performance();
+void	vector_assign_val_performance();
+void	vector_assign_iterator_performance();
