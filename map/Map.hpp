@@ -165,6 +165,13 @@ namespace ft {
 			return (_tree.equal_range(make_pair(key, mapped_type())));
 		}	
 
+		T& at(const Key &key){
+			iterator res = _tree.find(ft::make_pair(key, mapped_type()));
+			if (res == _tree.end())
+				throw std::out_of_range("map::at: key not found");
+			return (res->second);
+		}
+
 		template<class _Key, class _T, class _Compare, class _Alloc>
 		friend bool operator==(const map<_Key, _T, _Compare, _Alloc> & lhs,
 				const map<_Key, _T, _Compare, _Alloc>& rhs);
@@ -191,7 +198,7 @@ namespace ft {
 
 	template<class Key, class T, class Compare, class Alloc>
 	bool operator>(const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs){
-			return (rhs > lhs);
+			return (rhs < lhs);
 	}
 
 	template<class Key, class T, class Compare, class Alloc>

@@ -18,6 +18,7 @@ template< typename L>class RandomAccessIterator
 		typedef	typename iterator_traits<L*>::pointer	pointer;
 		typedef	typename iterator_traits<L*>::reference	reference;
 		typedef	typename iterator_traits<L*>::difference_type	difference_type;
+		typedef pointer iterator_type;
 		//this is for std::functions
 		typedef	std::random_access_iterator_tag iterator_category;
 
@@ -197,22 +198,24 @@ template< typename L>class RandomAccessIterator
 
 		//OPERATOR=
 		vector& operator= (const vector& x){
-			if (_capacity != 0){
-				for (size_type i = 0; i < _size; i++)
-					_allocator.destroy(_first + i);
-				_allocator.deallocate(_first, _capacity);
+			if (this == &x)
+				return *this;
+			for (size_type i = 0; i < _size; i++)
+				_allocator.destroy(_first + i);
+			this->_size = x._size;
+			if(_capacity < _size){
+				if (_capacity != 0)
+					_allocator.deallocate(_first, _capacity);
+				_capacity = _size;
+				_first = _allocator.allocate(_capacity);
 			}
-			_capacity = x._capacity;
-			_size = x._size;
-			_allocator = x._allocator;
-			_first = _allocator.allocate(_capacity);
 			for (size_type i = 0; i < _size; i++)
 				_allocator.construct(_first + i, x[i]);
-			return (*this);
+			return *this;
 		}
 
 		//copy
-		vector (const vector& x) : _capacity(0){
+		vector (const vector& x) :  _size(0), _capacity(0){
 			*this = x;
 		}
 		
@@ -421,9 +424,9 @@ template< typename L>class RandomAccessIterator
 				_allocator.destroy(&(*position));
 				_allocator.construct(&(*position), val);
 				_size++;
-				}
-				return (begin() + start);
 			}
+			return (begin() + start);
+		}
 
 		//fill
 		void insert (iterator position, size_type n, const value_type& val){
@@ -557,7 +560,11 @@ template< typename L>class RandomAccessIterator
 		}
 		
 		void swap (vector& x){
-			std::swap(x, *this);
+			std::swap(_first, x._first);
+			std::swap(_size, x._size);
+			std::swap(_capacity, x._capacity);
+			std::swap(_allocator, x._allocator);
+
 		}
 
 		void clear(){
@@ -613,11 +620,13 @@ template< typename L>class RandomAccessIterator
 		return !(lhs < rhs);
 	}
 
-	
+};
+
+
+namespace std{
 	template< class T, class Alloc >
-	void swap( vector<T,Alloc>& lhs, vector<T,Alloc>& rhs ) {
+	void swap(ft::vector<T,Alloc>& lhs, ft::vector<T,Alloc>& rhs ) {
 		lhs.swap(rhs);
 	}
-
-};
+}
 #endif

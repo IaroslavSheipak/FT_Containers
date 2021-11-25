@@ -1,178 +1,12 @@
 #pragma once
 #include <memory>
 #include "../iterator/reverse_iterator.hpp"
+#include "../iterator/tree_iterator.hpp"
 #include "../utility/utility.hpp"
 
-template<class Value>
-struct Node{
-	//typedef Node*			pointer;
-	public:
-	explicit Node(Value *srcval = 0) :	value(srcval),
-										parent(0),
-										left(0),
-										right(0),
-										is_black(false),
-										is_nil(0){}
-	
-	Value	*value;
-	Node*	parent;
-	Node*	left;
-	Node*	right;	
-	bool	is_black;
-	bool	is_nil;
-
-	Node( Node const & other) {
-		this->is_black = other.is_black;
-		this->value = other.value;
-		this->parent = other.parent;
-		this->is_nil = other.is_nil;
-		this->right = other.right;
-		this->left = other.left;
-	};
-
-	Node& operator=(const Node& other){
-		this->is_black = other.is_black;
-		this->value = other.value;
-		this->is_nil = other.is_nil;
-		this->parent = other.parent;
-		this->right = other.right;
-		this->left = other.left;
-		return *this;
-	}	
-	virtual ~Node(){}
-};
 
 template<class Value, class Compare = std::less<Value>, class Alloc = std::allocator<Value> >
 class RBTree{
-	private:
-	template<typename T>
-	class TreeIter {
-	public:
-		typedef std::bidirectional_iterator_tag iterator_category;
-		typedef typename ft::iterator_traits<T*>::value_type 		value_type;
-		typedef typename ft::iterator_traits<T*>::reference 		reference;
-		typedef typename ft::iterator_traits<T*>::pointer			pointer;
-		typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
-		typedef Node<typename ft::remove_const<value_type>::type >* node_pointer;
-//		template <class _Cont, class _Comp, class _Alloc> friend class  RBTree;
-
-		//typedef Node<T>* node_pointer;
-
-	private:
-		node_pointer _node;
-
-		node_pointer tree_min(node_pointer n) const {
-			while(n->left != NULL && !n->left->is_nil)
-				n = n->left;
-			return n;
-		}
-
-		node_pointer tree_max(node_pointer n) const {
-			while (!n->right->is_nil)
-				n = n->right;
-			return n;
-		}
-
-	public:
-		TreeIter() {}
-
-		TreeIter(void *node): _node(static_cast<node_pointer>(node)) {}
-
-		TreeIter(const TreeIter<typename ft::remove_const<value_type>::type > & other)//: _node(other.node()) {}
-		{
-			*this = other;
-		}
-
-		TreeIter& operator=(const TreeIter<typename ft::remove_const<value_type>::type>& other) {
-			this->_node = other.node();
-			return *this;
-		}
-
-		reference operator*() const {
-			return *(_node->value);
-		}
-
-		pointer operator->() const {
-			return _node->value;
-		}
-
-		TreeIter& operator++() {
-			if (_node->right && !_node->right->is_nil) {
-				_node = tree_min(_node->right);
-			}
-			else {
-				node_pointer y = _node->parent;
-				while (y != NULL && _node == y->right) {
-					_node = y;
-					y = y->parent;
-				}
-				_node = y;
-			}
-			return *this;
-		}
-
-		TreeIter operator++(int) {
-			TreeIter<value_type> temp = *this;
-			if (!_node->right->is_nil) {
-				_node = tree_min(_node->right);
-			}
-			else {
-				node_pointer y = _node->parent;
-				while (y != NULL && _node == y->right) {
-					_node = y;
-					y = y->parent;
-				}
-				_node = y;
-			}
-			return temp;
-		}
-
-		TreeIter& operator--() {
-			if (_node->left && !_node->left->is_nil) {
-				_node = tree_max(_node->left);
-			}
-			else {
-				node_pointer y = _node->parent;
-				while (y != NULL && _node == y->left) {
-					_node = y;
-					y = y->parent;
-				}
-				_node = y;
-			}
-			return *this;
-		}
-
-		TreeIter operator--(int) {
-			TreeIter<value_type> temp = *this;
-			if (_node->left && !_node->left->is_nil) {
-				_node = tree_max(_node->left);
-			}
-			else {
-				node_pointer y = _node->parent;
-				while (y != NULL && _node == y->left) {
-					_node = y;
-					y = y->parent;
-				}
-				_node = y;
-			}
-			return temp;
-		}
-
-		node_pointer node() const {
-			return _node;
-		}
-	};	
-
-	template<typename A, typename B>
-	friend bool operator==(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
-		return (lhs.node() == rhs.node());
-	}
-
-	template<typename A, typename B>
-	friend bool operator!=(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
-		return (lhs.node() != rhs.node());
-	}
-
 	public:
 		typedef Value value_type;
 		typedef Compare value_compare;
@@ -201,13 +35,13 @@ class RBTree{
 		size_type					_size;
 		
 		//HELPER FUNCTIONS
-		node_pointer	tree_min(node_pointer n){
+		node_pointer	tree_min(node_pointer n) const{
 			while (n != NULL && !is_nil(n->left))
 				n = n->left;
 			return n;
 		}
 		
-		node_pointer	tree_max(node_pointer n){
+		node_pointer	tree_max(node_pointer n) const{
 			while (n != NULL && !is_nil(n->right))
 				n = n->right;
 			return n;
@@ -328,11 +162,11 @@ class RBTree{
 
 		void clear_node(node_pointer node){
 			if (node && !is_nil(node)) {
-				//clear_node(node->right);
-				//clear_node(node->left);
-				//_val_alloc.destroy(node->value);
-				//_val_alloc.deallocate(node->value, 1);
-				//_node_alloc.deallocate(node, 1);
+				clear_node(node->right);
+				clear_node(node->left);
+				_val_alloc.destroy(node->value);
+				_val_alloc.deallocate(node->value, 1);
+				_node_alloc.deallocate(node, 1);
 				
 			}
 		}
@@ -388,10 +222,10 @@ class RBTree{
 		}
 
 		iterator	begin(){
-			return (iterator(_size == 0 ? _header : tree_min(_root)));
+			return (iterator(_size == 0 ? _header : iterator(tree_min(_root))));
 		}
 		const_iterator	begin() const{
-			return (const_iterator(_size == 0 ? _header : tree_min(_root)));
+			return (const_iterator(_size == 0 ? _header : const_iterator(tree_min(_root))));
 		}
 
 		reverse_iterator rbegin(){
@@ -773,7 +607,7 @@ class RBTree{
 		}
 
 		ft::pair<iterator, iterator> equal_range(const value_type &value){
-			return (make_pair(lower_bound(value), upper_bound(value)));
+			return (ft::make_pair(lower_bound(value), upper_bound(value)));
 		}
 
 		//pair<const_iterator, const_iterator> equal_range(const value_type &value) const{
@@ -784,23 +618,33 @@ class RBTree{
 			return (_val_alloc);
 		}
 		
-		template<typename A, typename B>
-		friend bool operator==(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
-			return (lhs.node() == rhs.node());
-		}
 
-		template<typename A, typename B>
-		friend bool operator!=(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
-			return (lhs.node() != rhs.node());
-		}
+		//template<typename A, typename B>
+		//friend bool operator==(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
+		//	return (lhs.node() == rhs.node());
+		//}
+
+		//template<typename A, typename B>
+		//friend bool operator!=(const RBTree::template TreeIter<A> & lhs, const RBTree::template TreeIter<B> & rhs){
+		//	return (lhs.node() != rhs.node());
+		//}
 
 };
 
 template<class Content, class Compare, class Alloc>
+bool operator<(const RBTree<Content, Compare, Alloc>& lhs,  const RBTree<Content, Compare, Alloc>& rhs){
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+}
+
+template<class Content, class Compare, class Alloc>
+bool operator>(const RBTree<Content, Compare, Alloc>& lhs,  const RBTree<Content, Compare, Alloc>& rhs){
+	return (lhs < rhs);
+}
+
+
+template<class Content, class Compare, class Alloc>
 bool operator==(const RBTree<Content, Compare, Alloc>& lhs, const RBTree<Content, Compare, Alloc>& rhs){
-	if (lhs.size() != rhs.size())
-		return false;
-	return true;
+	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
 template<class Content, class Compare, class Alloc>
