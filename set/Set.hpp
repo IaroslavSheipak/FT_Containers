@@ -26,7 +26,7 @@ namespace ft{
 		typedef RBTree<value_type, key_compare, allocator_type> tree_type;
 		typedef typename tree_type::iterator iterator;
 		typedef typename tree_type::const_iterator const_iterator;
-		typedef typename tree_type::reverse_iterator iterator;
+		typedef typename tree_type::reverse_iterator reverse_iterator;
 		typedef typename tree_type::const_reverse_iterator const_reverse_iterator;
 
 	private:
@@ -108,7 +108,7 @@ namespace ft{
 		}	
 
 		void swap(set & other) {
-			_tree.swap
+			_tree.swap(other._tree);
 		}
 
 		iterator find(const Key& key) {
@@ -161,22 +161,22 @@ namespace ft{
 		}
 
 		void erase(iterator pos){
-			return _tree.erase(pos);
+			_tree.erase(pos);
 		}
 
-		void erase(const key & key){
+		size_type erase(const Key & key){
 			return _tree.erase(key);
 		}
 
 		void erase(iterator first, iterator last){
-			return _tree.erase(first, last);
+			_tree.erase(first, last);
 		}
 
-		template<class Key, class Comp, class Alloc>
-		friend bool operator==(const set<Key, Comp, Alloc>& lhs, const set<Key, Comp, Alloc>& lhs);
+		template<class K, class Com, class Al>
+		friend bool operator==(const set<K, Com, Al>& lhs, const set<K, Com, Al>& rhs);
 
-		template<class Key, class Comp, class Alloc>
-		friend bool operator<(const set<Key, Comp, Alloc>& lhs, const set<Key, Comp, Alloc>& lhs);
+		template<class K, class Com, class Al>
+		friend bool operator<(const set<K, Com, Al>& lhs, const set<K, Com, Al>& rhs);
 
 	};
 
@@ -187,7 +187,7 @@ namespace ft{
 
 	template<class Key, class Compare, class Alloc>
 	bool operator!=(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs){
-		return !(lhs._tree == rhs._tree);
+		return !(lhs == rhs);
 	}
 
 	template<class Key, class Compare, class Alloc>
@@ -197,22 +197,26 @@ namespace ft{
 
 	template<class Key, class Compare, class Alloc>
 	bool operator>(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs){
-		return lhs._tree > rhs._tree;
+		return rhs < lhs;
 	}
 
 	template<class Key, class Compare, class Alloc>
 	bool operator<=(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs){
-		return lhs._tree <= rhs._tree;
+		return !(lhs > rhs);
 	}
 
 	template<class Key, class Compare, class Alloc>
 	bool operator>=(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs){
-		return lhs._tree >= rhs._tree;
+		return !(lhs < rhs);
 	}
 
-	template<class Key, class Compare, class Alloc>
-	void swap(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs){=
-		lhs.swap(rhs);
-	}
 		
 };
+
+namespace std {
+	template<class Key,class Compare, class Alloc>
+	void swap(const ft::set<Key, Compare, Alloc>& lhs,
+			  const ft::set<Key, Compare, Alloc>& rhs) {
+		lhs.swap(rhs);
+	}
+}
