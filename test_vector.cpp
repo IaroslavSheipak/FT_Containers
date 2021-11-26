@@ -1,13 +1,13 @@
 #include "test_header.hpp"
 
-void	vector_constructor_output_res(std::vector<int> &vec, std::string name) {
+void	vector_constructor_output_res(ft::vector<int> &vec, std::string name) {
 	std::cout << name << ": size = " << vec.size() << ", capacity = " << vec.capacity() << std::endl;
 }
 
 template< class T, class Alloc>
-void output_vector(std::string name, std::vector<T, Alloc> &v) {
+void output_vector(std::string name, ft::vector<T, Alloc> &v) {
 	std::cout << "\t" << name << " contains: ";
-	for (typename std::vector<T>::iterator it = v.begin(); it != v.end(); ++it)
+	for (typename ft::vector<T>::iterator it = v.begin(); it != v.end(); ++it)
 		std::cout << *it << " ";
 	if (v.size() == 0)
 		std::cout << "nothing";
@@ -17,8 +17,8 @@ void output_vector(std::string name, std::vector<T, Alloc> &v) {
 
 void vector_iterators(){
 	std::cout << GREEN << "Vector iterator test:\n" << DEFAULT;
-	std::vector<int>::iterator	iter;
-	std::vector<int>::const_iterator	const_iter;
+	ft::vector<int>::iterator	iter;
+	ft::vector<int>::const_iterator	const_iter;
 	
 	const_iter=iter;
 	std::cout << "vector<int>::iterator iter;\n"
@@ -65,24 +65,24 @@ void	vector_constructor() {
 	std::cout << GREEN << "Constructors test:\n" << DEFAULT;
 
 	// constructors used in the same order as described above
-	std::vector<int> first;                                // empty vector of ints
+	ft::vector<int> first;                                // empty vector of ints
 	vector_constructor_output_res(first, "1) first()");
 
-	std::vector<int> second (4, 100);                       // four ints with value 100
+	ft::vector<int> second (4, 100);                       // four ints with value 100
 	vector_constructor_output_res(second, "2) second(4, 100)");
 	output_vector("second", second);
 
-	std::vector<int> third (second.begin(),second.end());  // iterating through second
+	ft::vector<int> third (second.begin(),second.end());  // iterating through second
 	vector_constructor_output_res(third, "3) third(second.begin(),second.end())");
 	output_vector("third", third);
 
-	std::vector<int> fourth (third);                       // a copy of third
+	ft::vector<int> fourth (third);                       // a copy of third
 	vector_constructor_output_res(fourth, "4) fourth (third)");
 	output_vector("fourth", fourth);
 
 	// the iterator constructor can also be used to construct from arrays:
 	int myints[] = {16,2,77,29};
-	std::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+	ft::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
 	std::cout << "int myints[] = {16,2,77,29}\n";
 	std::cout << "5) fifth (myints, myints + sizeof(myints) / sizeof(int) )\n";
 	output_vector("fifth", fifth);
@@ -93,7 +93,7 @@ void	vector_constructor() {
 void	vector_destructor() {
 	std::cout << GREEN << "Destructor test:\n" << DEFAULT;
 
-	std::vector<SampleClass> vec(5, SampleClass());
+	ft::vector<SampleClass> vec(5, SampleClass());
 	std::cout << "vector<SampleClass> vec(5, SampleClass());\n";
 
 	std::cout << "\tNo error and no leaks -> destructor is ok\n\n";
@@ -102,11 +102,11 @@ void	vector_destructor() {
 void	vector_operator_equal() {
 	std::cout << GREEN << "Operator equal test:\n" << DEFAULT;
 
-	std::vector<int> foo (3, 3);
-	std::vector<int> bar (5, 5);
+	ft::vector<int> foo (3, 3);
+	ft::vector<int> bar (5, 5);
 
 	bar = foo;
-	foo = std::vector<int>();
+	foo = ft::vector<int>();
 	std::cout << "vector<int> foo (3, 3);\n"
 				 "vector<int> bar (5, 5);\n"
 				 "\nbar = foo;\n"
@@ -124,7 +124,7 @@ void	vector_operator_equal() {
 void	vector_begin_end(){
 	std::cout << GREEN << "Begin - End test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 	for (int i=1; i<=5; i++) myvector.push_back(i);
 	std::cout << "for (int i=1; i<=5; i++) myvector.push_back(i);\n";
 
@@ -135,10 +135,10 @@ void	vector_begin_end(){
 void	vector_rbegin_rend(){
 	std::cout << GREEN << "Rbegin - Rend test:\n" << DEFAULT;
 
-	std::vector<int> myvector (5);  // 5 default-constructed ints
+	ft::vector<int> myvector (5);  // 5 default-constructed ints
 
 	int i=0;
-	std::vector<int>::reverse_iterator rit = myvector.rbegin();
+	ft::vector<int>::reverse_iterator rit = myvector.rbegin();
 	for (; rit!= myvector.rend(); ++rit)
 		*rit = ++i;
 
@@ -154,7 +154,7 @@ void	vector_rbegin_rend(){
 void	vector_size(){
 	std::cout << GREEN << "Size() test:\n" << DEFAULT;
 
-	std::vector<int> myints;
+	ft::vector<int> myints;
 	std::cout << "vector<int> myints;\n";
 	std::cout << "0. size: " << myints.size() << '\n';
 	std::cout << "\n";
@@ -174,7 +174,7 @@ void	vector_size(){
 
 void	vector_max_size_capacity() {
 	std::cout << GREEN << "Max_size() and capacity() test:\n" << DEFAULT;
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 
 	// set some content in the vector:
 	for (int i=0; i<100; i++)
@@ -190,7 +190,7 @@ void	vector_max_size_capacity() {
 void	vector_resize() {
 	std::cout << GREEN << "Resize test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 
 	// set some initial content:
 	for (int i = 1; i < 10; i++) myvector.push_back(i);
@@ -212,7 +212,7 @@ void	vector_resize() {
 void	vector_empty() {
 	std::cout << GREEN << "Empty test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 	std::cout << "vector<int> myvector;\n";
 	std::cout << "is empty: " << myvector.empty() << "\n";
 
@@ -220,7 +220,7 @@ void	vector_empty() {
 	std::cout << "for (int i = 1; i <= 10; i++) myvector.push_back(i);\n";
 	std::cout << "is empty: " << myvector.empty() << "\n";
 
-	myvector = std::vector<int>();
+	myvector = ft::vector<int>();
 	std::cout << "myvector = vector<int>();\n";
 	std::cout << "is empty: " << myvector.empty() << "\n\n";
 }
@@ -229,8 +229,8 @@ void	vector_empty() {
 void	vector_reserve(){
 	std::cout << GREEN << "Reserve test:\n" << DEFAULT;
 
-	std::vector<int>::size_type sz;
-	std::vector<int> foo;
+	ft::vector<int>::size_type sz;
+	ft::vector<int> foo;
 	sz = foo.capacity();
 	std::cout << "vector<int>::size_type sz;\n"
 				 "vector<int> foo;\n"
@@ -245,7 +245,7 @@ void	vector_reserve(){
 		}
 	}
 
-	std::vector<int> bar;
+	ft::vector<int> bar;
 	sz = bar.capacity();
 	bar.reserve(100);   // this is the only difference with foo above
 	std::cout << "vector<int> bar;\n"
@@ -266,7 +266,7 @@ void	vector_reserve(){
 void	vector_operator_brackets(){
 	std::cout << GREEN << "Operator brackets test:\n" << DEFAULT;
 
-	std::vector<int> myvector (10);   // 10 zero-initialized elements
+	ft::vector<int> myvector (10);   // 10 zero-initialized elements
 
 
 	// assign some values:
@@ -298,7 +298,7 @@ void	vector_operator_brackets(){
 void	vector_at(){
 	std::cout << GREEN << "At test:\n" << DEFAULT;
 
-	std::vector<int> myvector (10);   // 10 zero-initialized ints
+	ft::vector<int> myvector (10);   // 10 zero-initialized ints
 
 	// assign some values:
 	for (unsigned i=0; i<myvector.size(); i++)
@@ -326,7 +326,7 @@ void	vector_at(){
 void vector_front(){
 	std::cout << GREEN << "Front() test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 
 	myvector.push_back(78);
 	myvector.push_back(16);
@@ -346,7 +346,7 @@ void vector_front(){
 void vector_back(){
 	std::cout << GREEN << "Back() test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 
 	myvector.push_back(10);
 
@@ -366,9 +366,9 @@ void vector_back(){
 void vector_assign() {
 	std::cout << GREEN << "Assign test:\n" << DEFAULT;
 
-	std::vector<int> first;
-	std::vector<int> second;
-	std::vector<int> third;
+	ft::vector<int> first;
+	ft::vector<int> second;
+	ft::vector<int> third;
 
 	first.assign (7, 100);             // 7 ints with a value of 100
 	std::cout << "vector<int> first;\n"
@@ -393,7 +393,7 @@ void vector_assign() {
 void vector_push_back() {
 	std::cout << GREEN << "Push_back test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 
 	for(int i = 0; i < 1000; i++)
 		myvector.push_back (i);
@@ -407,7 +407,7 @@ void vector_push_back() {
 void vector_pop_back(){
 	std::cout << GREEN << "Pop_back test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 	int sum = 0;
 	myvector.push_back (100);
 	myvector.push_back (200);
@@ -434,8 +434,8 @@ void vector_pop_back(){
 void vector_insert() {
 	std::cout << GREEN << "Insert test:\n" << DEFAULT;
 
-	std::vector<int> myvector (3, 100);
-	std::vector<int>::iterator it;
+	ft::vector<int> myvector (3, 100);
+	ft::vector<int>::iterator it;
 
 	it = myvector.insert (myvector.begin(), 200);
 	std::cout << "vector<int> myvector (3, 100);\n"
@@ -449,7 +449,7 @@ void vector_insert() {
 
 	// "it" no longer valid, get a new one:
 	it = myvector.begin();
-	std::vector<int> anothervector (2, 400);
+	ft::vector<int> anothervector (2, 400);
 	myvector.insert (it + 2, anothervector.begin(), anothervector.end());
 	std::cout << "\n// it no longer valid, get a new one:\n"
 				 "it = myvector.begin();\n"
@@ -469,7 +469,7 @@ void vector_insert() {
 void vector_erase() {
 	std::cout << GREEN << "Erase test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 
 	// set some values (from 1 to 10)
 	for (int i = 1; i <= 10; i++) myvector.push_back(i);
@@ -493,8 +493,8 @@ void vector_erase() {
 void vector_swap(){
 	std::cout << GREEN << "Swap test:\n" << DEFAULT;
 
-	std::vector<int> foo (3, 100);   // three ints with a value of 100
-	std::vector<int> bar (5, 200);   // five ints with a value of 200
+	ft::vector<int> foo (3, 100);   // three ints with a value of 100
+	ft::vector<int> bar (5, 200);   // five ints with a value of 200
 
 	foo.swap(bar);
 	std::cout << "vector<int> foo (3, 100);   // three ints with a value of 100\n"
@@ -510,7 +510,7 @@ void vector_swap(){
 void vector_clear() {
 	std::cout << GREEN << "Clear test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 	myvector.push_back (100);
 	myvector.push_back (200);
 	myvector.push_back (300);
@@ -537,7 +537,7 @@ void vector_clear() {
 void vector_get_allocator(){
 	std::cout << GREEN << "Get_allocator() test:\n" << DEFAULT;
 
-	std::vector<int> myvector;
+	ft::vector<int> myvector;
 	int * p;
 	unsigned int i;
 
@@ -572,8 +572,8 @@ void vector_get_allocator(){
 void vector_relational_operators() {
 	std::cout << GREEN << "Relational operators test:\n" << DEFAULT;
 
-	std::vector<int> foo (3, 100);   // three ints with a value of 100
-	std::vector<int> bar (2, 200);   // two ints with a value of 200
+	ft::vector<int> foo (3, 100);   // three ints with a value of 100
+	ft::vector<int> bar (2, 200);   // two ints with a value of 200
 	std::cout << "vector<int> foo (3, 100);\n"
 				 "vector<int> bar (2, 200);\n\n";
 	std::cout << "foo == bar: "	<< (foo == bar) << std::endl;
@@ -588,8 +588,8 @@ void vector_relational_operators() {
 void vector_swap_nonmb() {
 	std::cout << GREEN << "Swap nonmember test:\n" << DEFAULT;
 
-	std::vector<int> foo (3, 100);   // three ints with a value of 100
-	std::vector<int> bar (5, 200);   // five ints with a value of 200
+	ft::vector<int> foo (3, 100);   // three ints with a value of 100
+	ft::vector<int> bar (5, 200);   // five ints with a value of 200
 
 	std::cout << "vector<int> foo (3, 100);\n"
 				"vector<int> bar (5, 200);\n";
@@ -611,13 +611,13 @@ void vector_swap_nonmb() {
 
 
 void vector_push_back_performance() {
-	std::vector<int> vec;
+	ft::vector<int> vec;
 	for (int i = 0; i < 300; i++)
 		vec.push_back(i);
 }
 
 void vector_insert_val_performance() {
-	std::vector<int> vec;
+	ft::vector<int> vec;
 	for (int i = 0; i < 100; i++) {
 		vec.insert(vec.begin(), i);
 	}
@@ -627,7 +627,7 @@ void vector_insert_val_performance() {
 }
 
 void vector_insert_fill_performance() {
-	std::vector<int> vec;
+	ft::vector<int> vec;
 	for (int i = 0; i < 100; i++) {
 		vec.insert(vec.begin(), 30, i);
 	}
@@ -637,7 +637,7 @@ void vector_insert_fill_performance() {
 }
 
 void vector_insert_iterator_performance() {
-	std::vector<int> vec;
+	ft::vector<int> vec;
 	int myints[] = {16, 2, 77, 29, 11, 15, 221};
 	for (size_t i = 0; i < 100; ++i)
 		vec.insert(vec.begin(), myints, myints + sizeof(myints) / sizeof(int));
@@ -646,7 +646,7 @@ void vector_insert_iterator_performance() {
 }
 
 void vector_erase_pos_performance() {
-	std::vector<int> vec(1000, 2);
+	ft::vector<int> vec(1000, 2);
 	for (size_t i = 0; i < 100; ++i)
 		vec.erase(vec.begin() + 100);
 	for (size_t i = 0; i < 100; ++i)
@@ -654,7 +654,7 @@ void vector_erase_pos_performance() {
 }
 
 void vector_erase_iterator_performance() {
-	std::vector<int> vec(500, 2);
+	ft::vector<int> vec(500, 2);
 	for (size_t i = 0; i < 20; ++i)
 		vec.erase(vec.begin() + 30, vec.begin() + 40);
 	for (size_t i = 0; i < 20; ++i)
@@ -662,13 +662,13 @@ void vector_erase_iterator_performance() {
 }
 
 void vector_reserve_performance() {
-	std::vector<int> vec(50, 1);
+	ft::vector<int> vec(50, 1);
 	for (size_t i = 0; i < 20; ++i)
 		vec.reserve(vec.capacity() * 2);
 }
 
 void vector_resize_performance() {
-	std::vector<int> vec(50, 1);
+	ft::vector<int> vec(50, 1);
 	for (size_t i = 0; i < 10; ++i)
 		vec.resize(vec.capacity() * 2);
 	for (size_t i = 0; i < 10; ++i)
@@ -676,7 +676,7 @@ void vector_resize_performance() {
 }
 
 void vector_assign_val_performance() {
-	std::vector<int> vec(50, 1);
+	ft::vector<int> vec(50, 1);
 	for (size_t i = 1; i < 30; ++i)
 		vec.assign(i * 2, i);
 	for (size_t i = 30; i > 0; --i)
@@ -684,8 +684,8 @@ void vector_assign_val_performance() {
 }
 
 void vector_assign_iterator_performance() {
-	std::vector<int> basic(200, 1);
-	std::vector<int> vec;
+	ft::vector<int> basic(200, 1);
+	ft::vector<int> vec;
 	for (size_t i = 0; i < 100; ++i)
 		vec.assign(basic.begin(), basic.begin() + (i * 2));
 }

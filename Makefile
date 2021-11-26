@@ -9,7 +9,7 @@ scary_flags = -Wall -Werror -Wextra
 
 NAME = tests
 
-SRCS = test_vector.cpp main.cpp test_map.cpp test_set.cpp
+SRCS = test_vector.cpp main.cpp test_map.cpp test_set.cpp test_stack.cpp
 
 all : $(NAME) 
 

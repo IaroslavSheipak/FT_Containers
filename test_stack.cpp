@@ -24,7 +24,10 @@ void stack_constructor()
 	std::cout << GREEN << "Constructor test:\n" << DEFAULT;
 	std::deque<int> mydeque (3,100);          // deque with 3 elements
 	ft::vector<int> myvector (2,200);        // vector with 2 elements
-
+	std::cout << "std::deque<int> mydeque (3,100);" << std::endl 
+              << "ft::vector<int> myvector (2,200);" << std::endl
+              << "std::stack<int> first;" << std::endl
+              << "std::stack<int> second (mydeque);" << std::endl;
 	std::stack<int> first;                    // empty stack
 	std::stack<int> second (mydeque);         // stack initialized to copy of deque
 
@@ -121,3 +124,5 @@ void stack_relational_operators()
   if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
   if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
 }
+
+

@@ -4,9 +4,9 @@
 
 
 template<class T, class Comp, class Alloc>
-void output_set(std::string name, std::set<T, Comp, Alloc> &s) {
+void output_set(std::string name, ft::set<T, Comp, Alloc> &s) {
 	std::cout << name << " contains:\n";
-	for (typename std::set<T>::iterator it = s.begin(); it != s.end(); ++it)
+	for (typename ft::set<T>::iterator it = s.begin(); it != s.end(); ++it)
 		std::cout << "\t=> " << *it<< '\n';
 	if (s.size() == 0)
 		std::cout << "\tnothing\n";
@@ -15,12 +15,12 @@ void output_set(std::string name, std::set<T, Comp, Alloc> &s) {
 void set_iterators(){
 	std::cout << GREEN << "Set iterator test:\n" << DEFAULT;
 
-	std::set<int> s;
+	ft::set<int> s;
 	for (int i = 0; i < 2; ++i)
 		s.insert(i);
 
-	std::set<int>::iterator it = s.begin();
-	std::set<int>::const_iterator it2 = it;
+	ft::set<int>::iterator it = s.begin();
+	ft::set<int>::const_iterator it2 = it;
 	std::cout << "set<int> s;\n"
 				 "for (int i = 0; i < 2; ++i)\n"
 				 "\ts.insert(i);\n"
@@ -49,28 +49,28 @@ void	set_constructor()
 	std::cout << "1)set<char> first;\n"
 				 "for (char i = 'a', i < 'e', ++i)\n"
 				 "\tfirst.insert(i);\n";
-	std::set<char> first;
+	ft::set<char> first;
 	for (char i = 'a'; i < 'e'; ++i)
 		first.insert(i);
 	output_set("first", first);
 	std::cout << "\n";
 
-	std::set<char> second (first.begin(),first.end());
+	ft::set<char> second (first.begin(),first.end());
 	std::cout << "2)set<char> second (first.begin(),first.end());\n";
 	output_set("second", second);
 	std::cout << "\n";
 
-	std::set<char> third (second);
+	ft::set<char> third (second);
 	std::cout << "3)set<char> third (second);\n";
 	output_set("third", third);
 	std::cout << "\n";
 
-//	std::set<char, classcomp> fourth;                 // class as Compare
+//	ft::set<char, classcomp> fourth;                 // class as Compare
 //	std::cout << "4)set<char, classcomp> fourth;\n";
 //
 //	bool(*fn_pt)(char,char) = fncomp;
 //
-//	std::set<char, bool(*)(char,char)> fifth (fn_pt); // function pointer as Compare
+//	ft::set<char, bool(*)(char,char)> fifth (fn_pt); // function pointer as Compare
 //	std::cout << "\tbool(*fn_pt)(char,char) = fncomp;\n";
 //	std::cout << "5)set<char, bool(*)(char,char)> fifth (fn_pt);\n";
 	std::cout << "\n";
@@ -79,7 +79,7 @@ void	set_constructor()
 
 void set_destructor(){
 	std::cout << GREEN << "Destructor test:\n" << DEFAULT;
-	std::set<int> s;
+	ft::set<int> s;
 	for (int i = 0; i < 5; i++)
 		s.insert(i);
 	std::cout << "set<SampleClass> s;\n"
@@ -91,8 +91,8 @@ void set_destructor(){
 
 void set_operator_equals(){
 	std::cout << GREEN << "Operator equals test:\n" << DEFAULT;
-	std::set<char> first;
-	std::set<char> second;
+	ft::set<char> first;
+	ft::set<char> second;
 
 	for (char i = 'x'; i != 'z'; ++i)
 		first.insert(i);
@@ -107,7 +107,7 @@ void set_operator_equals(){
 	std::cout << "\n";
 
 	std::cout << "Size of first: " << first.size() << '\n';
-	first = std::set<char>();  // and first is now empty
+	first = ft::set<char>();  // and first is now empty
 	std::cout << "first = set<char>();\n";
 	output_set("first", first);
 	std::cout << "Size of first: " << first.size() << '\n';
@@ -117,7 +117,7 @@ void set_operator_equals(){
 void set_begin_end(){
 	std::cout << GREEN << "Begin - end test:\n" << DEFAULT;
 
-	std::set<char> myset;
+	ft::set<char> myset;
 
 	for (char i = 'a'; i < 'd'; ++i)
 		myset.insert(i);
@@ -127,7 +127,7 @@ void set_begin_end(){
 
 	// show content:
 	std::cout << "for (<char>::iterator it = myset.begin(); it != myset.end(); ++it)\n";
-	for (std::set<char>::iterator it = myset.begin(); it != myset.end(); ++it)
+	for (ft::set<char>::iterator it = myset.begin(); it != myset.end(); ++it)
 		std::cout << "\t=>" << *it << "\n";
 	std::cout << "\n";
 }
@@ -135,7 +135,7 @@ void set_begin_end(){
 void set_rbegin_rend(){
 	std::cout << GREEN << "Rbegin - rend test:\n" << DEFAULT;
 
-	std::set<char> myset;
+	ft::set<char> myset;
 
 	for (char i = 'a'; i < 'd'; ++i)
 		myset.insert(i);
@@ -145,7 +145,7 @@ void set_rbegin_rend(){
 
 	// show content:
 	std::cout << "for (rit=myset.rbegin(); rit!=myset.rend(); ++rit)\n";
-	std::set<char>::reverse_iterator rit;
+	ft::set<char>::reverse_iterator rit;
 	for (rit=myset.rbegin(); rit!=myset.rend(); ++rit)
 		std::cout << "\t=>" << *rit << "\n";
 	std::cout << "\n";
@@ -154,7 +154,7 @@ void set_rbegin_rend(){
 void set_empty(){
 	std::cout << GREEN << "Empty test:\n" << DEFAULT;
 
-	std::set<char> myset;
+	ft::set<char> myset;
 
 	for (char i = 'a'; i < 'd'; ++i)
 		myset.insert(i);
@@ -174,7 +174,7 @@ void set_empty(){
 void set_size(){
 	std::cout << GREEN << "Size test:\n" << DEFAULT;
 
-	std::set<char> myset;
+	ft::set<char> myset;
 	std::cout << "set<char> myset;\n";
 	std::cout << "\tmyset.size() is " << myset.size() << '\n';
 	for (char i = 'a'; i < 'd'; ++i)
@@ -189,7 +189,7 @@ void set_size(){
 
 void set_max_size(){
 	std::cout << GREEN << "Max size test:\n" << DEFAULT;
-	std::set<int> myset;
+	ft::set<int> myset;
 
 	std::cout << "If myset.max_size() > 1000: insert 1000 elements\n";
 	if (myset.max_size() > 1000)
@@ -207,8 +207,8 @@ void set_max_size(){
 
 void set_insert(){
 	std::cout << GREEN << "Insert test:\n" << DEFAULT;
-	std::set<int> myset;
-	std::set<int>::iterator it;
+	ft::set<int> myset;
+	ft::set<int>::iterator it;
 	// first insert function version (single parameter):
 	std::cout << "first insert function version (single parameter):\n";
 	myset.insert ( 1 );
@@ -218,7 +218,7 @@ void set_insert(){
 				"\tmyset.insert ( 2 );\n"
 				"ret = myset.insert ( 2 );\n";
 
-	std::pair<std::set<int>::iterator,bool> ret;
+	ft::pair<ft::set<int>::iterator,bool> ret;
 	ret = myset.insert ( 2 );
 	if (ret.second==false) {
 		std::cout << "element '2' already existed\n";
@@ -239,7 +239,7 @@ void set_insert(){
 
 	// third insert function version (range insertion):
 	std::cout << "\nthird insert function version (range insertion):\n";
-	std::set<int> anotherset;
+	ft::set<int> anotherset;
 	anotherset.insert(myset.begin(), myset.find(3));
 	std::cout << "set<int> anotherset;\n"
 				 "\tanotherset.insert(myset.begin(), myset.find(3));\n";
@@ -254,8 +254,8 @@ void set_insert(){
 void set_erase(){
 	std::cout << GREEN << "Erase test:\n" << DEFAULT;
 
-	std::set<char> myset;
-	std::set<char>::iterator it;
+	ft::set<char> myset;
+	ft::set<char>::iterator it;
 
 	// insert some values:
 	for (char i = 'a'; i < 'g'; ++i)
@@ -291,7 +291,7 @@ void set_erase(){
 void set_swap() {
 	std::cout << GREEN << "Swap test:\n" << DEFAULT;
 
-	std::set<char> foo, bar;
+	ft::set<char> foo, bar;
 
 	for (char i = 'x'; i < 'z'; ++i)
 		foo.insert(i);
@@ -315,7 +315,7 @@ void set_swap() {
 void set_clear(){
 	std::cout << GREEN << "Clear test:\n" << DEFAULT;
 
-	std::set<char> myset;
+	ft::set<char> myset;
 
 	for (char i = 'a'; i < 'd'; ++i)
 		myset.insert(i);
@@ -342,9 +342,9 @@ void set_clear(){
 
 void set_value_comp(){
 	std::cout << GREEN << "Key comp:\n" << DEFAULT;
-	std::set<char> myset;
+	ft::set<char> myset;
 
-	std::set<char>::key_compare mycomp = myset.key_comp();
+	ft::set<char>::key_compare mycomp = myset.key_comp();
 
 	for (char i = 'a'; i < 'd'; ++i)
 		myset.insert(i);
@@ -353,7 +353,7 @@ void set_value_comp(){
 
 	char highest = *myset.rbegin();     // key value of last element
 
-	std::set<char>::iterator it = myset.begin();
+	ft::set<char>::iterator it = myset.begin();
 	do {
 		std::cout << "\t=> " << *it << '\n';
 	} while ( mycomp((*it++), highest) );
@@ -363,9 +363,9 @@ void set_value_comp(){
 
 void set_find(){
 	std::cout << GREEN << "Find test:\n" << DEFAULT;
-	std::set<char> myset;
+	ft::set<char> myset;
 
-	std::set<char>::iterator it;
+	ft::set<char>::iterator it;
 
 	for (char i = 'a'; i < 'd'; ++i)
 		myset.insert(i);
@@ -385,7 +385,7 @@ void set_find(){
 void set_count(){
 	std::cout << GREEN << "Count test:\n" << DEFAULT;
 
-	std::set<char> myset;
+	ft::set<char> myset;
 	char c;
 
 	myset.insert('a');
@@ -406,8 +406,8 @@ void set_count(){
 void set_lower_bound(){
 	std::cout << GREEN << "Lower bound test:\n" << DEFAULT;
 
-	std::set<char> myset;
-	std::set<char>::iterator itlow, itup;
+	ft::set<char> myset;
+	ft::set<char>::iterator itlow, itup;
 
 	for (char i = 'a'; i < 'f'; ++i)
 		myset.insert(i);
@@ -424,8 +424,8 @@ void set_lower_bound(){
 
 void set_upper_bound(){
 	std::cout << GREEN << "Upper bound test:\n" << DEFAULT;
-	std::set<char> myset;
-	std::set<char>::iterator itlow, itup;
+	ft::set<char> myset;
+	ft::set<char>::iterator itlow, itup;
 
 	for (char i = 'a'; i < 'f'; ++i)
 		myset.insert(i);
@@ -442,12 +442,12 @@ void set_upper_bound(){
 
 void set_equal_range(){
 	std::cout << GREEN<< "Equal range test:\n" << DEFAULT;
-	std::set<char> myset;
+	ft::set<char> myset;
 
 	for (char i = 'a'; i < 'd'; ++i)
 		myset.insert(i);
 
-	std::pair<std::set<char>::iterator, std::set<char>::iterator> ret;
+	ft::pair<ft::set<char>::iterator, ft::set<char>::iterator> ret;
 	ret = myset.equal_range('b');
 
 	std::cout << "lower bound points to: ";
@@ -461,14 +461,14 @@ void set_equal_range(){
 void set_get_allocator(){
 	std::cout << GREEN << "Get allocator test:\n" << DEFAULT;
 	int psize;
-	std::set<char> myset;
+	ft::set<char> myset;
 	char* p;
 
 	// allocate an array of 5 elements using mymap's allocator:
 	p=myset.get_allocator().allocate(5);
 
 	// assign some values to array
-	psize = sizeof(std::set<char>::value_type) * 5;
+	psize = sizeof(ft::set<char>::value_type) * 5;
 
 	std::cout << "The allocated array has a size of " << psize << " bytes.\n";
 
@@ -479,8 +479,8 @@ void set_get_allocator(){
 void set_swap_nonmb() {
 	std::cout << GREEN << "Swap nonmember test:\n" << DEFAULT;
 
-	std::set<int> foo;
-	std::set<int> bar;
+	ft::set<int> foo;
+	ft::set<int> bar;
 
 	for (int i = 0; i < 2; i++) {
 		foo.insert(i);
@@ -514,20 +514,20 @@ void set_swap_nonmb() {
 // performance
 
 void set_insert_val_performance() {
-	std::set<int> s;
+	ft::set<int> s;
 	for (int i = 0; i < 100; ++i)
 		s.insert(i);
 }
 
 void set_insert_hint_performance() {
-	std::set<int> s;
+	ft::set<int> s;
 	for (int i = 0; i < 100; ++i)
 		s.insert(s.end(), i);
 }
 
 void set_insert_iterator_performance() {
-	std::set<int> s;
-	std::set<int> s2;
+	ft::set<int> s;
+	ft::set<int> s2;
 	for (int i = 0; i < 50; ++i) {
 		s2.insert(i);
 		s.insert(s2.begin(), s2.end());
@@ -535,7 +535,7 @@ void set_insert_iterator_performance() {
 }
 
 void set_erase_pos_performance() {
-	std::set<int> s;
+	ft::set<int> s;
 	for (int i = 0; i < 50; ++i)
 		s.insert(i);
 	for (int i = 0; i < 50; ++i)
@@ -543,7 +543,7 @@ void set_erase_pos_performance() {
 }
 
 void set_erase_val_performance() {
-	std::set<int> s;
+	ft::set<int> s;
 	for (int i = 0; i < 50; ++i)
 		s.insert(i);
 	for (int i = 0; i < 50; ++i)
@@ -551,10 +551,10 @@ void set_erase_val_performance() {
 }
 
 void set_erase_iterator_performance() {
-	std::set<int> s;
+	ft::set<int> s;
 	for (int i = 0; i < 50; ++i)
 		s.insert(i);
-	std::set<int>::iterator it;
+	ft::set<int>::iterator it;
 	for (int i = 0; i < 25; ++i) {
 		it = s.begin();
 		for (size_t i = 0; i < 2; ++i) ++it;
@@ -563,7 +563,7 @@ void set_erase_iterator_performance() {
 }
 
 void set_find_performance() {
-	std::set<int> s;
+	ft::set<int> s;
 	for (int i = 0; i < 70; ++i)
 		s.insert(i);
 	for (int i = 0; i < 90; ++i)

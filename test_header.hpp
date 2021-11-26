@@ -4,6 +4,8 @@
 //#include "../ft_containers/iterator/iterator.hpp"
 #include "../ft_containers/map/RBTree.hpp"
 #include "../ft_containers/map/Map.hpp"
+#include "../ft_containers/set/Set.hpp"
+#include "../ft_containers/stack/Stack.hpp"
 #endif
 #ifdef kirill
 #include "../ft_containers/stack/stack.hpp"
@@ -124,3 +126,12 @@ void set_erase_pos_performance();
 void set_erase_val_performance();
 void set_erase_iterator_performance();
 void set_find_performance();
+
+//stack
+
+void stack_constructor();
+void stack_empty();
+void stack_size();
+void stack_top();
+void stack_push_pop();
+void stack_relational_operators();
