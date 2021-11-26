@@ -13,17 +13,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9060aff9-4f6f-4cb1-89fe-89981c203b16" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/test_set.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_stack.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SampleClass.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/SampleClass.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ft" beforeDir="false" afterPath="$PROJECT_DIR$/ft" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp-e" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/std" beforeDir="false" afterPath="$PROJECT_DIR$/std" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_header.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/test_header.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_map.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test_map.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_map.cpp-e" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/test_vector.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test_vector.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_vector.cpp-e" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,10 +84,15 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
@@ -105,7 +110,8 @@
       <option name="presentableId" value="Default" />
       <updated>1637755291152</updated>
       <workItem from="1637755292915" duration="9846000" />
-      <workItem from="1637841901950" duration="14206000" />
+      <workItem from="1637841901950" duration="14999000" />
+      <workItem from="1637929048964" duration="5941000" />
     </task>
     <servers />
   </component>

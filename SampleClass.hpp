@@ -26,3 +26,8 @@ class SampleClass{
 	private:
 		int *_nums;
 };
+
+//bool operator!=(const SampleClass &lhs,
+//				const SampleClass &rhs) {
+//	return true;
+//}

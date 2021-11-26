@@ -1,4 +1,268 @@
-[33;1mVECTOR TESTS:
+[33;1mMAP TESTS:
+[m[33;1m\\\\\\\\\
+
+[m[32;1mMap iterator test:
+[mmap<int, int> m;
+	m[0] = 0;
+	m[1] = 0;
+ft::map<int, int>::iterator it = m.begin();
+ft::map<int, int>::const_iterator it2 = it;
+it == it2: 1
+it++;
+it == it2: 0
+--it;
+it == it2: 1
+++it2;
+it2--;
+it == it2: 1
+
+[32;1mConstructor test:
+[m1)map<char,int> first;
+	first['a']=10;
+	first['b']=30;
+	first['c']=50;
+	first['d']=70;
+first contains:
+	a => 10
+	b => 30
+	c => 50
+	d => 70
+
+2)map<char,int> second (first.begin(),first.end());
+second contains:
+	a => 10
+	b => 30
+	c => 50
+	d => 70
+
+3)map<char,int> third (second);
+third contains:
+	a => 10
+	b => 30
+	c => 50
+	d => 70
+
+4)map<char,int,classcomp> fourth;
+	bool(*fn_pt)(char,char) = fncomp;
+5)map<char,int,bool(*)(char,char)> fifth (fn_pt);
+
+[32;1mDestructor test:
+[mmap<int, SampleClass> m;
+	for (int i = 0; i < 5; i++)
+		m[i] = SampleClass();
+No errors and no leaks -> all is ok
+
+[32;1mOperator equals test:
+[mmap<char,int> first;
+	first['x']=8;
+	first['y']=16;
+	first['z']=32;
+second = first;
+first == second: 1
+second contains:
+	x => 8
+	y => 16
+	z => 32
+
+Size of first: 3
+first = map<char,int>();
+first contains:
+	nothing
+Size of first: 0
+Size of second: 3
+
+[32;1mBegin - end test:
+[mmap<char,int> mymap;
+	mymap['b'] = 100;
+	mymap['a'] = 200;
+	mymap['c'] = 300;
+for (map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+	a => 200
+	b => 100
+	c => 300
+
+[32;1mRbegin - rend test:
+[mmap<char,int> mymap;
+	mymap['x'] = 100;
+	mymap['y'] = 200;
+	mymap['z'] = 300;
+for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
+	z => 300
+	y => 200
+	x => 100
+
+[32;1mEmpty test:
+[mmap<char,int> mymap;
+	mymap['a']=10;
+	mymap['b']=20;
+	mymap['c']=30;
+while is not empty: show begin and then erase begin
+	a => 10
+	b => 20
+	c => 30
+
+[32;1mSize test:
+[mmap<char,int> mymap;
+	mymap.size() is 0
+mymap['a']=101;
+mymap['b']=202;
+mymap['c']=302;
+	mymap.size() is 3
+
+[32;1mMax size test:
+[mIf mymap.max_size() > 1000: insert 1000 elements
+The map contains 1000 elements.
+
+[32;1moperator brackets test:
+[mmymap['a'] is an element
+mymap['b'] is another element
+mymap['c'] is another element
+mymap['d'] is 
+mymap now contains 4 elements.
+
+[32;1mInsert test:
+[mfirst insert function version (single parameter):
+map<char,int> mymap;
+	mymap.insert (pair<char,int>('a', 100));
+	mymap.insert (pair<char,int>('z', 200));
+	ret = mymap.insert (pair<char,int>('z', 500));
+element 'z' already existed with a value of 200
+mymap contains:
+	a => 100
+	z => 200
+
+second insert function version (with hint position):
+it = mymap.begin();
+	mymap.insert (it, pair<char,int>('b', 300));
+	mymap.insert (it, pair<char,int>('c', 400));
+mymap contains:
+	a => 100
+	b => 300
+	c => 400
+	z => 200
+
+third insert function version (range insertion):
+map<char,int> anothermap;
+	anothermap.insert(mymap.begin(), mymap.find('c'));
+mymap contains:
+	a => 100
+	b => 300
+	c => 400
+	z => 200
+anothermap contains:
+	a => 100
+	b => 300
+
+[32;1mErase test:
+[mmap<char,int> mymap;
+	mymap['a']=10;
+	mymap['b']=20;
+	mymap['c']=30;
+	mymap['d']=40;
+	mymap['e']=50;
+	mymap['f']=60;
+mymap contains:
+	a => 10
+	b => 20
+	c => 30
+	d => 40
+	e => 50
+	f => 60
+
+1) erasing by iterator:
+	mymap.erase (mymap.find('b'));
+mymap contains:
+	a => 10
+	c => 30
+	d => 40
+	e => 50
+	f => 60
+
+1) erasing by key:
+	mymap.erase ('c');
+mymap contains:
+	a => 10
+	d => 40
+	e => 50
+	f => 60
+
+1) erasing by range:
+	it=mymap.find ('e');
+	mymap.erase (it, mymap.end());
+mymap contains:
+	a => 10
+	d => 40
+
+[32;1mSwap test:
+[mmap<char,int> foo, bar;
+	foo['x']=100;
+	foo['y']=200;
+
+	bar['a']=11;
+	bar['b']=22;
+	bar['c']=33;
+foo.swap(bar);
+foo contains:
+	a => 11
+	b => 22
+	c => 33
+bar contains:
+	x => 100
+	y => 200
+
+[32;1mClear test:
+[mmap<char,int> mymap;
+	mymap['x']=100;
+	mymap['y']=200;
+	mymap['z']=300;
+mymap contains:
+	x => 100
+	y => 200
+	z => 300
+
+mymap.clear();
+mymap contains:
+	nothing
+
+mymap['a']=1101;
+mymap['b']=2202;
+mymap contains:
+	a => 1101
+	b => 2202
+
+[32;1mSwap nonmember test:
+[mmap<int, int> foo;
+map<int, int> bar;
+for (int i = 0; i < 2, i++) {
+	foo[i] = i;
+	foo[i + 5] = i + 5;
+	bar[i - 1] = i - 1;
+}
+foo size = 4
+foo contains:
+	0 => 0
+	1 => 1
+	5 => 5
+	6 => 6
+bar size = 2
+bar contains:
+	-1 => -1
+	0 => 0
+
+std::swap(foo, bar);
+foo size = 2
+foo contains:
+	-1 => -1
+	0 => 0
+bar size = 4
+bar contains:
+	0 => 0
+	1 => 1
+	5 => 5
+	6 => 6
+
+[33;1m/////////
+[m[33;1mVECTOR TESTS:
 [m[33;1m\\\\\\\\\
 
 [m[32;1mVector iterator test:
@@ -275,6 +539,245 @@ foo: size = 5, capacity = 5
 	foo contains: 200 200 200 200 200 
 bar: size = 3, capacity = 3
 	bar contains: 100 100 100 
+
+[33;1m/////////
+[m[33;1mSET TESTS:
+[m[33;1m\\\\\\\\\
+
+[m[32;1mSet iterator test:
+[mset<int> s;
+for (int i = 0; i < 2; ++i)
+	s.insert(i);
+set<int>::iterator it = s.begin();
+set<int>::const_iterator it2 = it;
+it == it2: 1
+it++;
+it == it2: 0
+--it;
+it == it2: 1
+++it2;
+it2--;
+it == it2: 1
+
+[32;1mConstructor test:
+[m1)set<char> first;
+for (char i = 'a', i < 'e', ++i)
+	first.insert(i);
+first contains:
+	=> a
+	=> b
+	=> c
+	=> d
+
+2)set<char> second (first.begin(),first.end());
+second contains:
+	=> a
+	=> b
+	=> c
+	=> d
+
+3)set<char> third (second);
+third contains:
+	=> a
+	=> b
+	=> c
+	=> d
+
+
+[32;1mDestructor test:
+[mset<SampleClass> s;
+for (int i = 0; i < 5; i++)
+	s.insert(SampleClass());
+No errors and no leaks -> all is ok
+
+[32;1mOperator equals test:
+[mset<char> first;
+set<char> second;
+for (char i = 'x'; i != 'z'; ++i)
+	first.insert(i);
+second = first;
+first == second: 1
+second contains:
+	=> x
+	=> y
+
+Size of first: 2
+first = set<char>();
+first contains:
+	nothing
+Size of first: 0
+Size of second: 2
+
+[32;1mBegin - end test:
+[mset<char> myset;
+for (char i = 'a'; i < 'd'; ++i)
+	myset.insert(i);
+for (<char>::iterator it = myset.begin(); it != myset.end(); ++it)
+	=>a
+	=>b
+	=>c
+
+[32;1mRbegin - rend test:
+[mset<char> myset;
+for (char i = 'a'; i < 'd'; ++i)
+	myset.insert(i);
+for (rit=myset.rbegin(); rit!=myset.rend(); ++rit)
+	=>c
+	=>b
+	=>a
+
+[32;1mEmpty test:
+[mset<char> myset;
+for (char i = 'a'; i < 'd'; ++i)
+	myset.insert(i);
+while is not empty: show begin and then erase begin
+	=>a
+	=>b
+	=>c
+
+[32;1mSize test:
+[mset<char> myset;
+	myset.size() is 0
+set<char> myset;
+for (char i = 'a'; i < 'd'; ++i)
+	myset.insert(i);
+	myset.size() is 3
+
+[32;1mMax size test:
+[mIf myset.max_size() > 1000: insert 1000 elements
+The set contains 1000 elements.
+
+[32;1mInsert test:
+[mfirst insert function version (single parameter):
+set<int> myset;
+	myset.insert ( 1 );
+	myset.insert ( 2 );
+ret = myset.insert ( 2 );
+element '2' already existed
+myset contains:
+	=> 1
+	=> 2
+
+second insert function version (with hint position):
+it = myset.begin();
+	myset.insert (it, 3);
+	myset.insert (it, 4);
+myset contains:
+	=> 1
+	=> 2
+	=> 3
+	=> 4
+
+third insert function version (range insertion):
+set<int> anotherset;
+	anotherset.insert(myset.begin(), myset.find(3));
+myset contains:
+	=> 1
+	=> 2
+	=> 3
+	=> 4
+anotherset contains:
+	=> 1
+	=> 2
+
+[32;1mErase test:
+[mset<char> myset;
+for (char i = 'a'; i < 'g'; ++i)
+	myset.insert(i);
+myset contains:
+	=> a
+	=> b
+	=> c
+	=> d
+	=> e
+	=> f
+
+1) erasing by iterator:
+	myset.erase (myset.find('b'));
+myset contains:
+	=> a
+	=> c
+	=> d
+	=> e
+	=> f
+
+1) erasing by key:
+	myset.erase ('c');
+myset contains:
+	=> a
+	=> d
+	=> e
+	=> f
+
+1) erasing by range:
+	it=myset.find ('e');
+	myset.erase (it, myset.end());
+myset contains:
+	=> a
+	=> d
+
+[32;1mSwap test:
+[mmap<char> foo, bar;
+for (char i = 'x'; i < 'z'; ++i)
+	foo.insert(i);
+for (char i = 'a'; i < 'd'; ++i)
+	bar.insert(i);
+foo contains:
+	=> a
+	=> b
+	=> c
+bar contains:
+	=> x
+	=> y
+
+[32;1mClear test:
+[mset<char> myset;
+for (char i = 'a'; i < 'd'; ++i)
+	myset.insert(i);
+myset contains:
+	=> a
+	=> b
+	=> c
+
+myset.clear();
+myset contains:
+	nothing
+
+for (char i = 'x'; i < 'z'; ++i)
+	myset.insert(i);
+myset contains:
+	=> x
+	=> y
+
+[32;1mSwap nonmember test:
+[mset<int> foo;
+set<int> bar;
+for (int i = 0; i < 2; i++) {
+	foo.insert(i);
+	foo.insert(i + 5);
+	bar.insert(i - 1);
+}foo size = 4
+foo contains:
+	=> 0
+	=> 1
+	=> 5
+	=> 6
+bar size = 2
+bar contains:
+	=> -1
+	=> 0
+
+std::swap(foo, bar);
+foo size = 2
+foo contains:
+	=> -1
+	=> 0
+bar size = 4
+bar contains:
+	=> 0
+	=> 1
+	=> 5
+	=> 6
 
 [33;1m/////////
 [m

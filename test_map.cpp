@@ -30,8 +30,8 @@ void map_iterators(){
 	std::cout << "map<int, int> m;\n"
 				 "\tm[0] = 0;\n"
 				 "\tm[1] = 0;\n"
-				 "std::map<int, int>::iterator it = m.begin();\n"
-				 "std::map<int, int>::const_iterator it2 = it;\n";
+				 "<int, int>::iterator it = m.begin();\n"
+				 "<int, int>::const_iterator it2 = it;\n";
 	std::cout << "it == it2: " << (it == it2) << std::endl;
 	it++;
 	std::cout << "it++;\n";
@@ -468,7 +468,7 @@ void map_count(){
 		std::cout << c;
 		if (mymap.count(c)>0)
 			std::cout << " is an element of mymap.\n";
-		else 
+		else
 			std::cout << " is not an element of mymap.\n";
 	}
 	std::cout << "\n";

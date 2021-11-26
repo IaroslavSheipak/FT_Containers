@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <cassert>
 #include <map>
+#include <set>
 
 # define B_CYAN "\x1b[46;1m"
 # define B_RED  "\x1b[41;1m"
@@ -25,6 +26,8 @@
 # define GREEN  "\x1b[32;1m"
 # define BLUE    "\x1b[34;1m"
 # define DEFAULT "\x1b[m"
+
+
 
 // map
 
@@ -94,3 +97,30 @@ void	vector_reserve_performance();
 void	vector_resize_performance();
 void	vector_assign_val_performance();
 void	vector_assign_iterator_performance();
+
+// set
+
+void	set_iterators();
+void	set_constructor();
+void	set_destructor();
+void	set_operator_equals();
+void	set_begin_end();
+void	set_rbegin_rend();
+void	set_empty();
+void	set_size();
+void	set_max_size();
+void	set_insert();
+void	set_erase();
+void	set_swap();
+void	set_clear();
+void	set_swap_nonmb();
+
+// performance
+
+void set_insert_val_performance();
+void set_insert_hint_performance();
+void set_insert_iterator_performance();
+void set_erase_pos_performance();
+void set_erase_val_performance();
+void set_erase_iterator_performance();
+void set_find_performance();

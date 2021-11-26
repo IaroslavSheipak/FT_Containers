@@ -91,7 +91,6 @@ void test_map(void (dec)(std::string name, void (&func)())) {
 	std::cout << YELLOW << "/////////\n" << DEFAULT;
 }
 
-
 void test_map_performance(void (dec)(std::string name, void (&func)())) {
 	std::cout << YELLOW << "MAP PERFORMANCE TESTS:\n" << DEFAULT;
 	std::cout << YELLOW << "\\\\\\\\\\\\\\\\\\\n\n" << DEFAULT;
@@ -125,16 +124,56 @@ void test_vector_performance(void (dec)(std::string name, void (&func)())) {
 	std::cout << YELLOW << "/////////\n" << DEFAULT;
 }
 
+void test_set(void (dec)(std::string name, void (&func)())) {
+
+	std::cout << YELLOW << "SET TESTS:\n" << DEFAULT;
+	std::cout << YELLOW << "\\\\\\\\\\\\\\\\\\\n\n" << DEFAULT;
+
+	dec("set_iterators", set_iterators);
+	dec("set_constructor", set_constructor);
+	dec("set_destructor", set_destructor);
+	dec("set_operator_equals",set_operator_equals);
+	dec("set_begin_end", set_begin_end);
+	dec("set_rbegin_rend", set_rbegin_rend);
+	dec("set_empty", set_empty);
+	dec("set_size", set_size);
+	dec("set_max_size", set_max_size);
+	dec("set_insert", set_insert);
+	dec("set_erase", set_erase);
+	dec("set_swap", set_swap);
+	dec("set_clear", set_clear);
+	dec("set_swap_nonmb", set_swap_nonmb);
+
+	std::cout << YELLOW << "/////////\n" << DEFAULT;
+}
+
+void test_set_performance(void (dec)(std::string name, void (&func)())) {
+	std::cout << YELLOW << "SET PERFORMANCE TESTS:\n" << DEFAULT;
+	std::cout << YELLOW << "\\\\\\\\\\\\\\\\\\\n\n" << DEFAULT;
+
+	dec("set_insert_val_performance", set_insert_val_performance);
+	dec("set_insert_hint_performance", set_insert_hint_performance);
+	dec("set_insert_iterator_performance", set_insert_iterator_performance);
+	dec("set_erase_pos_performance", set_erase_pos_performance);
+	dec("set_erase_val_performance", set_erase_val_performance);
+	dec("set_erase_iterator_performance", set_erase_iterator_performance);
+	dec("set_find_performance", set_find_performance);
+
+	std::cout << YELLOW << "/////////\n" << DEFAULT;
+}
+
 int main()
 {
 	//test_map(run_func); // default test
 	//test_map(speed_test); // speed test
-
-	test_map_performance(speed_test); // performance
+	//test_map_performance(speed_test); // performance
 
 	//test_vector(run_func); // default test
 	//test_vector(speed_test); // speed test
-
 	//test_vector_performance(speed_test); //performance
+
+	//test_set(run_func); // default test
+	//test_map(speed_test); // speed test
+	test_set_performance(speed_test); // performance
 	return (0);
 }
