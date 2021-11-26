@@ -163,12 +163,15 @@ void test_set_performance(void (dec)(std::string name, void (&func)())) {
 }
 
 void  test_stack(){
+	std::cout << YELLOW << "STACK TESTS:\n" << DEFAULT;
+	std::cout << YELLOW << "\\\\\\\\\\\\\\\\\\\n\n" << DEFAULT;
 	stack_constructor();
 	stack_empty();
 	stack_size();
 	stack_top();
 	stack_push_pop();
 	stack_relational_operators();
+	std::cout << YELLOW << "/////////\n" << DEFAULT;
 }
 
 int main()
@@ -183,7 +186,7 @@ int main()
 
 	//test_set(run_func); // default test
 	//test_map(speed_test); // speed test
-	test_set_performance(speed_test); // performance
+	//test_set_performance(speed_test); // performance
 	test_stack();
 	return (0);
 }

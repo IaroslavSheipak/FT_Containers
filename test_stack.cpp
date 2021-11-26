@@ -1,12 +1,12 @@
 // constructing stacks
 #include "test_header.hpp"
 #include <iostream>       // std::cout
-#include <stack>          // std::stack
+#include <stack>          // ft::stack
 #include <vector>         // ft::vector
 #include <deque>          // std::deque
 
 template<class T, class Container>
-void output_stack(std::string name, std::stack<T, Container> s) {
+void output_stack(std::string name, ft::stack<T, Container> s) {
 	std::cout << name << " contains:\n";
 	if (s.size() == 0)
 		std::cout << "\tnothing\n";
@@ -24,16 +24,16 @@ void stack_constructor()
 	std::cout << GREEN << "Constructor test:\n" << DEFAULT;
 	std::deque<int> mydeque (3,100);          // deque with 3 elements
 	ft::vector<int> myvector (2,200);        // vector with 2 elements
-	std::cout << "std::deque<int> mydeque (3,100);" << std::endl 
-              << "ft::vector<int> myvector (2,200);" << std::endl
-              << "std::stack<int> first;" << std::endl
-              << "std::stack<int> second (mydeque);" << std::endl;
-	std::stack<int> first;                    // empty stack
-	std::stack<int> second (mydeque);         // stack initialized to copy of deque
+	std::cout << "deque<int> mydeque (3,100);" << std::endl
+              << "vector<int> myvector (2,200);" << std::endl
+              << "stack<int> first;" << std::endl
+              << "stack<int> second (mydeque);" << std::endl;
+	ft::stack<int> first;                    // empty stack
+	ft::stack<int, std::deque<int> > second (mydeque);         // stack initialized to copy of deque
 
 
-	std::stack<int,ft::vector<int> > third;  // empty stack using vector
-	std::stack<int,ft::vector<int> > fourth (myvector);
+	ft::stack<int,ft::vector<int> > third;  // empty stack using vector
+	ft::stack<int,ft::vector<int> > fourth (myvector);
 
 	output_stack("first", first);
 	output_stack("second", second);
@@ -50,7 +50,7 @@ void stack_constructor()
 void stack_empty()
 {
 std::cout << GREEN << "Empty test:\n" << DEFAULT;
-  std::stack<int> mystack;
+  ft::stack<int> mystack;
   int sum (0);
 
   for (int i=1;i<=10;i++) mystack.push(i);
@@ -68,7 +68,7 @@ std::cout << GREEN << "Empty test:\n" << DEFAULT;
 void stack_size()
 {
 	std::cout << GREEN << "Size test:\n" << DEFAULT;
-  std::stack<int> myints;
+  ft::stack<int> myints;
   std::cout << "0. size: " << myints.size() << '\n';
 
   for (int i=0; i<5; i++) myints.push(i);
@@ -80,7 +80,7 @@ void stack_size()
 
 void stack_top()
 {
-  std::stack<int> mystack;
+  ft::stack<int> mystack;
 
   mystack.push(10);
   mystack.push(20);
@@ -93,7 +93,7 @@ void stack_top()
 void stack_push_pop()
 {
 	std::cout << GREEN << "Push Pop test:\n" << DEFAULT;
-  std::stack<int> mystack;
+  ft::stack<int> mystack;
 
   for (int i=0; i<5; ++i) mystack.push(i);
 
@@ -114,8 +114,8 @@ void stack_relational_operators()
   ft::vector<int> first (3,100);
   ft::vector<int> second (2,200);
 
-  std::stack<int,ft::vector<int> > foo(first);  // empty stack using vector
-  std::stack<int,ft::vector<int> > bar(second);
+  ft::stack<int,ft::vector<int> > foo(first);  // empty stack using vector
+  ft::stack<int,ft::vector<int> > bar(second);
 
   if (foo==bar) std::cout << "foo and bar are equal\n";
   if (foo!=bar) std::cout << "foo and bar are not equal\n";

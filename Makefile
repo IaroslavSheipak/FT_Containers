@@ -29,6 +29,7 @@ ft:
 	sed -i ''  's/std::pair/ft::pair/g' test_set.cpp
 	sed -i ''  's/std::make_pair/ft::make_pair/g' test_map.cpp
 	sed -i ''  's/std::set/ft::set/g' test_set.cpp
+	sed -i ''  's/std::stack/ft::stack/g' test_stack.cpp
 	make comp
 std: 
 	sed -i ''  's/ft::vector/std::vector/g' main.cpp
@@ -38,6 +39,7 @@ std:
 	sed -i '' 's/ft::pair/std::pair/g' test_set.cpp
 	sed -i '' 's/ft::make_pair/std::make_pair/g' test_map.cpp
 	sed -i ''  's/ft::set/std::set/g' test_set.cpp
+	sed -i ''  's/ft::stack/std::stack/g' test_stack.cpp
 
 	make comp
 
