@@ -538,11 +538,14 @@ template< typename L>class RandomAccessIterator
 //
 		//single element
 		iterator erase (iterator position){
-			difference_type d = std::distance(begin(), position);
-			std::copy(position + 1, end(), position);
+			size_type d = static_cast<size_type>(std::distance(begin(), position));
+			for (size_type i = d; i < _size - 1; ++i){
+				_allocator.destroy(_first + i);
+				_allocator.construct(_first + i, *(_first + i + 1));
+			}
 			_size--;
 			_allocator.destroy(_first + _size - 1);
-			return (d == static_cast<difference_type>(_size) ? end() : iterator(_first + d));
+			return iterator(_first + d);
 		}
 
 		//range
